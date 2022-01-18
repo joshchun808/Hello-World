@@ -1,6 +1,0 @@
-<html>
-  <b><i>
-    Hello from Joshua Chun!
-  </i>
-  </b>  
-</html>
