@@ -101,12 +101,15 @@
 
     <footer>
         <script>
+        var line = 1
+        var now = new Date() 
+
         document.write(`
         <table border="1" style="margin-left: auto; margin-right: auto; text-align: center;">
             <tr><th colspan="2"><h1>Your One Stop For Used Phones - ${first_name[0]}.${last_name[0]}.'s</h1></th></tr>
-            <tr><td>1.</td><td><br />Copyright @ ${first_name} ${last_name}</td></tr>
-            <tr><td>2.</td><td>2021</td></tr>
-            <tr><td>3.</td><td>11:15 AM</td></tr>
+            <tr><td>${line}</td><td><br />Copyright @ ${first_name} ${last_name}</td></tr>
+            <tr><td>${++line}</td><td>${Date.getyear()}</td></tr>
+            <tr><td>${++line}</td><td>11:15 AM</td></tr>
         </table>
         `);
         </script>
