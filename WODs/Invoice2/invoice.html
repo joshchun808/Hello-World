@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice2</title>
+
+    <script>
+    // Product 1
+    var item1 = 'Gillette Sensor 3 Razor';
+    var quantity1 = 2;
+    var price1 = 1.23;
+
+    // Product 2
+    var item2 = 'Barbasol Shaving Cream';
+    var quantity2 = 1;
+    var price2 = 2.64;
+
+    // Product 3
+    var item3 = 'Nautica Cologne';
+    var quantity3 = 1;
+    var price3 = 6.17;
+
+    // Product 4
+    var item4 = 'Rubbing Alcohol';
+    var quantity4 = 3;
+    var price4 = 0.98;
+
+    // Product 5
+    var item5 = 'Gillette Sensor 3 Razor';
+    var quantity5 = 12;
+    var price5 = 1.89;
+
+    // Compute extended prices
+    var extended_price1 = quantity1*price1
+    var extended_price2 = quantity2*price2
+    var extended_price3 = quantity3*price3
+    var extended_price4 = quantity4*price4
+    var extended_price5 = quantity5*price5
+
+    // Tax Rate
+    var tax_rate = 0.0575 
+
+    // Shiping Rate
+    var shipping = 0
+
+    // Compute Cost
+    var sub_total = extended_price1+extended_price2+extended_price3+extended_price4+extended_price5
+    var tax_total = sub_total*tax_rate
+    var total_cost = sub_total+tax_total+shipping
+    
+    // Compute Shipping
+    if(sub_total > 100){
+        shipping = sub_total*0.05
+    }
+    else if(sub_total < 50){
+        shipping = 2
+    }
+    else(sub_total < 100)[
+        shipping = 5
+    ]
+
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                <b>Itme</b>
+            </td>
+            <td>
+                <b>quantity</b>
+            </td>
+            <td>
+                <b>price</b>
+            </td>
+            <td>
+                <b>extended price</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    document.write(item1)
+                </script>
+            </td>
+            <td>
+                <script>
+                    document.write(quantity1)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(price1)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(extended_price1)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    document.write(item2)
+                </script>
+            </td>
+            <td>
+                <script>
+                    document.write(quantity2)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(price2)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(extended_price2)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    document.write(item3)
+                </script>
+            </td>
+            <td>
+                <script>
+                    document.write(quantity3)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(price3)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(extended_price3)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    document.write(item4)
+                </script>
+            </td>
+            <td>
+                <script>
+                    document.write(quantity4)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(price4)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(extended_price4)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script>
+                    document.write(item5)
+                </script>
+            </td>
+            <td>
+                <script>
+                    document.write(quantity5)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(price5)
+                </script>
+            </td>
+            <td>
+                $
+                <script>
+                    document.write(extended_price5)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td> </td>
+        </tr>
+        <tr>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>Sub-total</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(sub_total)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>Tax @ 5.75%</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(tax_total.toFixed(2))
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>Shipping</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(shipping.toFixed(2))
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    Total
+                </b>
+            </td>
+            <td> </td>
+            <td> </td>
+            <td>
+                <b> 
+                    $
+                    <script>
+                        document.write(total_cost.toFixed(2))
+                    </script>
+                </b>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
