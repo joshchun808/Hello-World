@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice2</title>
+
+    <script src="./products_data.js"></script>
+
+    <script>
+    function isNonNegInt(q, returnErrors=false) {
+    errors = []; // assume no errors at first
+    if(Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
+    if(q < 0) errors.push('Negative value!'); // Check if it is non-negative
+    if(parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
+
+    return (returnErrors ? errors : (errors.length == 0))
+    }
+
+    var sub_total = 0;
+
+    function generate_item_rows() {    
+            for(i=1; eval("typeof name" + i); i++) {
+            let extended_price = product_quantities[i] * products[i].price;
+            sub_total += extended_price;
+            document.write(`
+            <tr>
+            <td>${products[i].name}</td>
+            <td>${product_quantities[i]}</td>
+            <td>$${products[i].price}</td>
+            <td>$${extended_price}</td>
+            </tr>
+        `)    
+        }
+    }
+
+    var product_quantities = [2, 1, 1, 3, 12];
+
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                <b>Itme</b>
+            </td>
+            <td>
+                <b>quantity</b>
+            </td>
+            <td>
+                <b>price</b>
+            </td>
+            <td>
+                <b>extended price</b>
+            </td>
+        </tr>
+        
+        <script> 
+        generate_item_rows(); 
+        </script>
+        <script>
+        // Tax Rate
+        var tax_rate = 0.0575 
+
+        // Shiping Rate
+        var shipping = 0
+
+        // Compute Cost
+        var tax_total = sub_total*tax_rate
+        var total_cost = sub_total+tax_total+shipping
+
+        // Compute Shipping
+        if(sub_total > 100){
+        shipping = sub_total*0.05
+        }
+        else if(sub_total < 50){
+        shipping = 2
+        }
+        else(sub_total < 100)[
+        shipping = 5
+        ]
+        </script>
+
+        <tr>
+            <td> </td>
+        </tr>
+        <tr>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>Sub-total</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(sub_total)
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>Tax @ 5.75%</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(tax_total.toFixed(2))
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>Shipping</td>
+            <td> </td>
+            <td> </td>
+            <td>
+                $
+                <script>
+                    document.write(shipping.toFixed(2))
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    Total
+                </b>
+            </td>
+            <td> </td>
+            <td> </td>
+            <td>
+                <b> 
+                    $
+                    <script>
+                        document.write(total_cost.toFixed(2))
+                    </script>
+                </b>
+            </td>
+        </tr>
+    </table>
+    <p><b>OUR SHIPPING POLICY IS:A subtotal $0 - $49.99 will be $2 shipping</b></p>
+    <p><b>A subtotal $50 - $99.99 will be $5 shipping</b></p>
+    <p><b>Subtotals over $100 will be charged 5% of the subtotal amount</b></p>
+</body>
+</html>
