@@ -24,9 +24,10 @@
 
     let params = (new URL(document.location)).searchParams;
 
-
+    //sub total var
     var sub_total = 0;
 
+    //function to generate the Item rows
     function generate_item_rows() {    
             for(i=1; eval("typeof name" + i); i++) {
             let extended_price = qty_textbox[i] * products[i].price;
@@ -46,6 +47,7 @@
 
 </head>
 <body>
+    <!--Table for invoice-->
     <table>
         <tr>
             <td>
