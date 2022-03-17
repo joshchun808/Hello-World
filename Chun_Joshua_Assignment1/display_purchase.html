@@ -8,26 +8,33 @@
 
     <script src="./products_data.js"></script>
 
-    <script>
-    function isNonNegInt(q, returnErrors=false) {
-    errors = []; // assume no errors at first
-    if(Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
-    if(q < 0) errors.push('Negative value!'); // Check if it is non-negative
-    if(parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
+<script>
+    //Code from Lab11
+    //Function to check if NonNegInt
+    function isNonNegInt(q, returnErrors = false) {
+        errors = []; // assume no errors at first
+        if (Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
+        else {
+            if (q < 0) errors.push('Negative value!'); // Check if it is non-negative
+            if (parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
+        }
 
-    return (returnErrors ? errors : (errors.length == 0))
+        return (returnErrors ? errors : (errors.length == 0));
     }
+
+    let params = (new URL(document.location)).searchParams;
+
 
     var sub_total = 0;
 
     function generate_item_rows() {    
             for(i=1; eval("typeof name" + i); i++) {
-            let extended_price = product_quantities[i] * products[i].price;
+            let extended_price = qty_textbox[i] * products[i].price;
             sub_total += extended_price;
             document.write(`
             <tr>
             <td>${products[i].name}</td>
-            <td>${product_quantities[i]}</td>
+            <td>${qty_textbox[i]}</td>
             <td>$${products[i].price}</td>
             <td>$${extended_price}</td>
             </tr>
@@ -35,9 +42,8 @@
         }
     }
 
-    var product_quantities = [2, 1, 1, 3, 12];
+</script>
 
-    </script>
 </head>
 <body>
     <table>
@@ -57,7 +63,7 @@
         </tr>
         
         <script> 
-        generate_item_rows(); 
+        generate_item_rows(); //calls the generate_item_rows function
         </script>
         <script>
         // Tax Rate
