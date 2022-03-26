@@ -4,10 +4,15 @@ var app = express();
 
 app.use(express.urlencoded({ extended: true }));
 
+
+
 //respond to any request for any path
 app.all('*', function (request, response, next) {
     console.log(request.method + ' to path ' + request.path); next();
 });
+
+var products = require('./products.json');
+products.forEach( (prod,i) => {prod.total_sold = 0});
 
 app.get("/product_data.js", function (request, response, next) {
     response.type('.js');
@@ -15,9 +20,9 @@ app.get("/product_data.js", function (request, response, next) {
     response.send(products_str);
  }); 
 
-app.get('/test', function (request, response, next) {
+/*app.get('/test', function (request, response, next) {
     response.send('In test:' request.method + ' to path ' + request.path);
-});
+});*/
 
 app.post('/process_form', function (request, response, next) {
     let name = products[0]['name'];

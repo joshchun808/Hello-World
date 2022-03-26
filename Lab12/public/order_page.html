@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <script src="./product_data.js"></script>
+    <script src="./product_data.json"></script>
 
 </head>
 
@@ -17,6 +17,10 @@
     </script>
     <form name="quantity_form" action="./process_form" method="POST">
         <label>quantity desired:</label>
+        <script>
+            for (i in products) {
+            document.write(`<h4>${products[i]["total_sold"]} ${products[i]["brand"]} have been sold!</h4>`);
+            }</script>    
         <input type="text" name="qty_textbox1" onkeyup="checkQuantityTextbox(this);">
         <span id='qty_textbox1_message'>Enter a quantity</span>
         <br>
