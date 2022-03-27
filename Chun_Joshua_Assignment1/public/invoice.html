@@ -23,6 +23,27 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
 <!--functions-->
 <script>
+  //Function from Lab11
+  //Check if textbox isNonNegInt
+  function checkQuantityTextbox(theTextbox) {
+  errs = isNonNegInt(theTextbox.value, true);
+  document.getElementById(theTextbox.name + '_message').innerHTML = errs.join(", ");
+}
+  
+  
+  //function to check if NonNegInt
+  function isNonNegInt(q, return_errors = false) {
+  errors = []; // assume no errors at first
+  if (q == '') q = 0; // handle blank inputs as if they are 0
+  if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); // Check if string is a number value
+  else if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if it is non-negative
+  else if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
+  return return_errors ? errors : (errors.length == 0);
+}
+</script>
+
+
+<script>
   //from lab 12
   let params = (new URL(document.location)).searchParams;
   if (params.has("quantity")) { 
@@ -36,7 +57,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
   //function to generate the Item rows
   function generate_item_rows() {    
-    for(i=1; eval("typeof name" + i); i++) {
+    for(i=0; eval("typeof name" + i); i++) {
       let extended_price = quantities[i] * products[i].price;
       sub_total += extended_price;
       document.write(`
