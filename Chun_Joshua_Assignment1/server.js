@@ -47,12 +47,13 @@ app.use(express.urlencoded ({extended: true }));
 
 // Get quantity data from order form and check it 
 app.post('/process_form', function (request, response) {
-    console.log(request.body);
-    var quantities = request.body["quantity"];
+    console.log(request.body); //Prof suggestion
+    var quantities = []; //Prof suggestion
     // Assume no errors  
     var errors = {};
     // Check quantities are non-negative integers 
     for (i in quantities) {
+        quantities[i] = request.body['quantity'+i]; //Prof suggestion
         // Check quantity 
         if (isNonNegInt(quantities[i]) == false) {
             errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}`;
@@ -65,7 +66,7 @@ app.post('/process_form', function (request, response) {
     }
     
 
-    let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
+    let qty_obj = { "quantity": JSON.stringify(quantities) }; //Prof suggestion
     console.log(Object.keys(errors), qty_obj);
     // Ask if the object is empty or not 
     if (Object.keys(errors).length == 0) {
