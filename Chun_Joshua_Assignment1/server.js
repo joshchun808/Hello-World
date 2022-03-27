@@ -1,15 +1,29 @@
-//Server from lab 12
+// Based on server.js from Reece Nagaoka, FALL 2021
+
+//from server.js
+var argv = require('minimist')(process.argv.slice(2));
 var express = require('express');
 var app = express();
+app.all('*', function (request, response, next) {
+    console.log(request.method + ' to path ' + request.path);
+    next();
+});
 
 //pull products_data
-var products = require('./products_data.json');
+var products = require(__dirname + '/products_data.json');
+
+app.get("/products_data.js", function (request, response, next) {
+   response.type('.js');
+   var products_str = `var products = ${JSON.stringify(products)};`;
+   response.send(products_str);
+});
 
 const qs = require('querystring');
 
 // Monitors all requests
 app.all('*', function (request, response, next) {
-    console.log(request.method + ' to path ' + request.path); next();
+    console.log(request.method + ' to path ' + request.path);
+    next();
 });
 
 
@@ -34,28 +48,21 @@ app.use(express.urlencoded ({extended: true }));
 // Get quantity data from order form and check it 
 app.post('/process_form', function (request, response) {
     var quantities = request.body["quantity"];
-    // Assume no errors or quantities for now 
+    // Assume no errors  
     var errors = {};
-    var check_quantities = false;
     // Check quantities are non-negative integers 
     for (i in quantities) {
         // Check quantity 
         if (isNonNegInt(quantities[i]) == false) {
             errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}`;
         }
-        // Check if quantities were selected 
-        if (quantities[i] > 0) {
-            check_quantities = true;
-        }
+        
         // Check if quantity desired is available 
         if (quantities[i] > products[i].quantity_available) {
             errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
         }
     }
-    // Check if quantity is selected
-    if (!check_quantities) {
-        errors['no_quantities'] = `Please select some items!`;
-    }
+    
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
     console.log(Object.keys(errors));
@@ -64,17 +71,16 @@ app.post('/process_form', function (request, response) {
         for (i in quantities) {
             products[i].quantity_available -= Number(quantities[i]);
         }
-        response.redirect('./invoice.html?' + qs.stringify(qty_obj));
+        response.redirect('./public/invoice.html?' + qs.stringify(qty_obj));
     }
     // Otherwise go back to products_display.html 
     else {
         let errs_obj = { "errors": JSON.stringify(errors) };
         console.log(qs.stringify(qty_obj));
-        response.redirect('./store.html?' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
+        response.redirect('./public/store.html?' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
     }
 });
 
-/* Route all other GET requests to files in public */
-app.use(express.static('./public/index.html'));
-
-app.listen(8080, () => console.log(`listening on port 8080`)); // note the use of an anonymous function here to do a callback
+//from server.js
+app.use(express.static( (typeof argv["rootdir"] != "undefined")?argv["rootdir"] : "." ) );
+app.listen(8080, () => console.log(`listening on port 8080`));
