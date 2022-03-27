@@ -47,6 +47,7 @@ app.use(express.urlencoded ({extended: true }));
 
 // Get quantity data from order form and check it 
 app.post('/process_form', function (request, response) {
+    console.log(request.body);
     var quantities = request.body["quantity"];
     // Assume no errors  
     var errors = {};
