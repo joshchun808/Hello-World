@@ -65,7 +65,7 @@ app.post('/process_form', function (request, response) {
     
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
-    console.log(Object.keys(errors));
+    console.log(Object.keys(errors), qty_obj);
     // Ask if the object is empty or not 
     if (Object.keys(errors).length == 0) {
         for (i in quantities) {
