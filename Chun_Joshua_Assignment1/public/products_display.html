@@ -24,9 +24,11 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 <!--functions-->
 <script>
   //variable to state if there are valid quantities
+  //used in checkQuantity function
   var valid_qty = true
 
   //function, if valid_qty is false, disable submit button
+  //*BUG* if user hits tab or backspace, submit button may re-enable when not supposed to
   function checkValidQty() {
     if(valid_qty != true) {
           document.getElementById("purchase_submit").disabled = true
@@ -108,7 +110,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
   </div>
 
   <div class="w3-container w3-text-grey">
-    <p>4 items</p> <!--appears above products, can remove-->
+    <p><script>document.write(products.length)</script> items</p> <!--appears above products, can remove-->
   </div>
 
   <!-- Product grid-->

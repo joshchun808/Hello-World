@@ -1,4 +1,4 @@
-// Based on server.js from Reece Nagaoka, FALL 2021
+// Based on server.js from Reece Nagaoka, Assignment1, FALL 2021
 
 //from server.js
 var argv = require('minimist')(process.argv.slice(2));
@@ -58,13 +58,13 @@ app.post('/process_form', function (request, response) {
         if (isNonNegInt(quantities[i]) == false) {
             console.log('valid quantity error')
             errors['quantity' + i] = `Please choose a valid quantity for ${products[i].name}`;
-        } //from Reece Nagaoka, FALL 2021
+        } //from Reece Nagaoka, Assignment1,FALL 2021
         
         // Check if quantity desired is available 
         if (quantities[i] > products[i].quantity_available) {
             console.log('quantity available error')
             errors['available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
-        } //from Reece Nagaoka, FALL 2021
+        } //from Reece Nagaoka, Assignment1, FALL 2021
     }
     
 
