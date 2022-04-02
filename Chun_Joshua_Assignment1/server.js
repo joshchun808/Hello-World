@@ -45,26 +45,32 @@ function isNonNegInt(q, returnErrors = false) {
 //From lab 12, access inputted data from products.js
 app.use(express.urlencoded ({extended: true }));
 
-// Get quantity data from order form and check it 
+
+// Get quantity data from order form and check it
 app.post('/process_form', function (request, response) {
     console.log(request.body); //Prof suggestion
-    var quantities = request.body["quantity"]; //Prof suggestion
-    // Assume no errors  
+    var quantities = request.body["quantity"];
+    // Assume no errors or quantities for now 
     var errors = {};
+    var check_quantities = false;
     // Check quantities are non-negative integers 
     for (i in quantities) {
-         //Prof suggestion
         // Check quantity 
         if (isNonNegInt(quantities[i]) == false) {
-            console.log('valid quantity error')
-            errors['quantity' + i] = `Please choose a valid quantity for ${products[i].name}`;
-        } //from Reece Nagaoka, Assignment1,FALL 2021
-        
-        // Check if quantity desired is available 
+            errors['quantity_' + i] = `Please_choose_a_valid_quantity`;
+        }
+        // Check if quantities were selected
+        if (quantities[i] > 0) {
+            check_quantities = true;
+        }
+        // Check if quantity desired is available
         if (quantities[i] > products[i].quantity_available) {
-            console.log('quantity available error')
-            errors['available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
-        } //from Reece Nagaoka, Assignment1, FALL 2021
+            errors['available_' + i] = `We_dont_have_enough_available.`;
+        }
+    }
+    // Check if quantity is selected
+    if (!check_quantities) {
+        errors['no_quantities'] = `Please_select_some_items!`;
     }
     
 
@@ -77,11 +83,12 @@ app.post('/process_form', function (request, response) {
         }
         response.redirect('./public/invoice.html?' + qs.stringify(qty_obj));
     }
-    // Otherwise go back to products_display.html 
+    // Otherwise go back to products_display.html
     else {
         let errs_obj = { "errors": JSON.stringify(errors) };
         console.log(qs.stringify(qty_obj));
-        response.redirect('./public/store.html?' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
+        console.log(request.body); //Prof suggestion
+        response.redirect('./public/products_display.html?' + qs.stringify(errs_obj));
     }
 });
 
