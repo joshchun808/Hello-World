@@ -13,9 +13,9 @@ app.all('*', function (request, response, next) {
 var products = require(__dirname + '/products_data.json');
 
 app.get("/products_data.js", function (request, response, next) {
-   response.type('.js');
-   var products_str = `var products = ${JSON.stringify(products)};`;
-   response.send(products_str);
+    response.type('.js');
+    var products_str = `var products = ${JSON.stringify(products)};`;
+    response.send(products_str);
 });
 
 const qs = require('querystring');
@@ -34,7 +34,7 @@ function isNonNegInt(q, returnErrors = false) {
     if (q == '') q = 0;
     if (Number(q) != q) errors.push('Not a number!'); // Check if string is a number value. 
     else {
-        if(q>25) errors.push('Not enough in stock. '); //checks quantity
+        if (q > 25) errors.push('Not enough in stock. '); //checks quantity
         if (q < 0) errors.push('Negative value!'); // Check if it is non-negative
 
         if (parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
@@ -43,7 +43,7 @@ function isNonNegInt(q, returnErrors = false) {
     return returnErrors ? errors : (errors.length == 0);
 }
 //From lab 12, access inputted data from products.js
-app.use(express.urlencoded ({extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 // Get quantity data from order form and check it 
 app.post('/process_form', function (request, response) {
@@ -53,20 +53,20 @@ app.post('/process_form', function (request, response) {
     var errors = {};
     // Check quantities are non-negative integers 
     for (i in quantities) {
-         //Prof suggestion
+        //Prof suggestion
         // Check quantity 
         if (isNonNegInt(quantities[i]) == false) {
             console.log('valid quantity error')
             errors['quantity' + i] = `Please choose a valid quantity for ${products[i].name}`;
         } //from Reece Nagaoka, Assignment1,FALL 2021
-        
+
         // Check if quantity desired is available 
         if (quantities[i] > products[i].quantity_available) {
             console.log('quantity available error')
             errors['available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
         } //from Reece Nagaoka, Assignment1, FALL 2021
     }
-    
+
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) }; //Prof suggestion
     console.log(Object.keys(errors), qty_obj);
@@ -86,5 +86,5 @@ app.post('/process_form', function (request, response) {
 });
 
 //from server.js
-app.use(express.static( (typeof argv["rootdir"] != "undefined")?argv["rootdir"] : "." ) );
+app.use(express.static((typeof argv["rootdir"] != "undefined") ? argv["rootdir"] : "."));
 app.listen(8080, () => console.log(`listening on port 8080`));
