@@ -87,14 +87,15 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     //login generate
     login = `
     <form action="/login" method="POST">
-    <p>Log In To Existing account</p>
-    <span id="email_message" style="color: red;"><b></b></span><br>
-    <input type="text" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
-    <span id="password_message" style="color: red;"></span><br>
-    <input type="password" name="password" size="40" placeholder="enter password"><br />
-    <input type="submit" value="Submit" id="submit">
+      <p>Login to existing account</p>
+      <b><span id="email_message" style="color: red;"></span>
+      <span id="password_message" style="color: red;"></span></b><br>
+      <input type="text" id="email" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
+      <input type="password" id="pw" name="password" size="40" placeholder="enter password" onkeyup="PassCarCheck(this)"><br />
+      <input type="submit" value="Submit" id="submit">
     </form>
     <br>
+    <button type="button" onclick="ChangeInfo(NewPW)">Change Password</button>
     <button type="button" onclick="ChangeInfo(register)">Register</button>
     <br>`
 
@@ -103,17 +104,38 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     <br>
     <form action="/register" method="POST">
     <p>Register a new account</p>
-    <span id="email_message" style="color: red;"><b></b></span><br>
-    <input type="text" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
-    <input type="text" name="name" size="30" placeholder="enter full name" ><br />
-    <span id="password_message" style="color: red;"></span><br>
-    <input type="password" name="password" size="40" placeholder="enter password"><br />
-    <span id="password2_message" style="color: red;"></span><br>
-    <input type="password" name="repeat_password" size="40" placeholder="enter password again"><br />
+    <b><span id="email_message" style="color: red;"></span>
+      <span id= "name_message" style="color: red;"></span>
+      <span id="password_message" style="color: red;"></span>
+    <span id= "password2_message" style="color: red;"></span></b><br>
+    <input type="text" id="email" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
+    <input type="text" id="name" name="name" size="40" placeholder="enter full name" onkeyup="ValidateName(this)"><br />
+    <input type="password" id="pw1" name="new_password" size="40" placeholder="enter password" onkeyup="PassCarCheck(this)"><br/>
+    <input type="password" id="pw2" name="repeat_password" size="40" placeholder="enter password again" onkeyup="PassMatch(this)"><br />
     <input type="submit" value="Register New User" id="submit">
     </form>
     <br>
     <button type="button" onclick="ChangeInfo(login)">Login</button>
+    <button type="button" onclick="ChangeInfo(NewPW)">Change Password</button>
+    <br>`
+
+    //change info
+    NewPW = `
+    <br>
+    <form action="/newpw" method="POST">
+    <p>Change password on existing account</p>
+    <b><span id="email_message" style="color: red;"></span>
+      <span id="password_message" style="color: red;"></span></b><br>
+    <input type="text" id="email" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
+    <input type="password" id="pw" name="password" size="40" placeholder="enter password" onkeyup="PassCarCheck(this)"><br/>
+    <b><span id= "password2_message" style="color: red;"></span></b><br>
+    <input type="password" id="pw1" name="new_password" size="40" placeholder="enter new password" onkeyup="PassCarCheck(this)"><br/>
+    <input type="password" id="pw2" name="repeat_password" size="40" placeholder="enter new password again" onkeyup="PassMatch(this)"><br />
+    <input type="submit" value="Change Password" id="submit">
+    </form>
+    <br>
+    <button type="button" onclick="ChangeInfo(login)">Login</button>
+    <button type="button" onclick="ChangeInfo(register)">Register</button>
     <br>`
     
     //function to change innerHTML
@@ -127,7 +149,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     function ValidateEmail(theTextbox) {
         //rename
         let emailtest = theTextbox.value;
-        //get ID for email_message
+        //get ID for email_message, resent message
         document.getElementById("email_message").innerHTML = "";
         //enable submit button if valid email
         document.getElementById('submit').disabled = false;
@@ -141,19 +163,73 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           document.getElementById('submit').disabled = true;
         }
     }
+
+    //function to check password for 8 characters
+    function PassCarCheck (theTextbox) {
+      //get ID for password_message, reset message
+      document.getElementById("password_message").innerHTML = "";
+      //enable submit button if valid email
+      document.getElementById('submit').disabled = false;
+      let PassCarTest = theTextbox.value;
+      //runs check
+      if (PassCarTest.length < 8 ) {
+        //writes to ID
+        document.getElementById("password_message").innerHTML = "Password must be 8 characters.";
+          //disable submit button
+          document.getElementById('submit').disabled = true;
+      }
+    }
+
+    //function, (reg) check if passwords match
+    function PassMatch (theTextbox) {
+      //get ID for password_message, reset message
+      document.getElementById("password2_message").innerHTML = "";
+      //enable submit button if valid email
+      document.getElementById('submit').disabled = false;
+      let pw1test = document.getElementById("pw1").value
+      let pw2test = document.getElementById("pw2").value
+      //runs check
+      if (pw1test != pw2test) {
+        //writes to ID
+        document.getElementById("password2_message").innerHTML = "Passwords do not match.";
+        //disable submit button
+        document.getElementById('submit').disabled = true;
+      }
+    }
+
+    //function to check name
+    function ValidateName(theTextbox) {
+        //rename
+        let nametest = theTextbox.value;
+        //get ID for email_message, resent message
+        document.getElementById("name_message").innerHTML = "";
+        //enable submit button if valid email
+        document.getElementById('submit').disabled = false;
+        //character check from https://stackoverflow.com/questions/17899107/how-to-validate-a-letter-and-whitespace-only-input-via-javascript-regular-expres
+        //DONT TOUCH
+        var expr2 = /^[A-Za-z ]+$/;
+        //runs check
+        if (!expr2.test(nametest)) {
+          //writes to ID
+          document.getElementById("name_message").innerHTML = "Invalid name, use only letters and spaces.";
+          //disable submit button
+          document.getElementById('submit').disabled = true;
+        }
+    }
   </script>
 
   <!--Login-->
   <span id="info"><br>
     <form action="/login" method="POST">
-    <p>Log In To Existing account</p>
-    <span id="email_message" style="color: red;"><b></b></span><br>
-    <input type="text" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
-    <span id="password_message" style="color: red;"></span><br>
-    <input type="password" name="password" size="40" placeholder="enter password"><br />
-    <input type="submit" value="Submit" id="submit">
+      <p>Login to existing account</p>
+      <b><span id="email_message" style="color: red;"></span>
+      <span id="password_message" style="color: red;"></span></b><br>
+      <input type="text" id="email" name="email" size="40" placeholder="enter email" onkeyup="ValidateEmail(this)"><br />
+      <input type="password" id="pw" name="password" size="40" placeholder="enter password" onkeyup="PassCarCheck(this)"><br />
+      <input type="submit" value="Submit" id="submit">
     </form>
     <br>
+    <button type="button" onclick="ChangeInfo(NewPW)">Change Password</button>
     <button type="button" onclick="ChangeInfo(register)">Register</button>
     <br>
   </span>
