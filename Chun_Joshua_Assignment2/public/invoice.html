@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<!--Author, Joshua Chun-->
 <head>
 
   <!--START, stylesheet W3 template, dont touch-->
@@ -73,6 +73,7 @@
       for (i = 0; eval("typeof name" + i); i++) {
         let extended_price = quantities[i] * products[i].price;
         sub_total += extended_price;
+        if (quantities[i] > 0) {
         document.write(`
         <tr>
         <td>${products[i].name}</td>
@@ -81,6 +82,7 @@
         <td>$${extended_price}</td>
         </tr>
         `)
+      }
       }
     }
   </script>

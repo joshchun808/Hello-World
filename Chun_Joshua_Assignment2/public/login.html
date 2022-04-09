@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<!--Author, Joshua Chun-->
 <head>
 
   <!--START, stylesheet W3 template, dont touch-->
@@ -175,7 +175,7 @@
           //get ID for email_message, resent message
           document.getElementById("email_message").innerHTML = "";
           //enable submit button if valid email
-          document.getElementById('submit').disabled = false;
+          /*document.getElementById('submit').disabled = false;*/ //removed, not approved by TA
           //character check, DONT TOUCH
           var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
           //runs check
@@ -183,7 +183,7 @@
             //writes to ID
             document.getElementById("email_message").innerHTML = "Invalid email address.";
             //disable submit button
-            document.getElementById('submit').disabled = true;
+            /*document.getElementById('submit').disabled = true;*/ //removed, not approved by TA
           }
         }
 
@@ -192,14 +192,14 @@
           //get ID for password_message, reset message
           document.getElementById("password_message").innerHTML = "";
           //enable submit button if valid email
-          document.getElementById('submit').disabled = false;
+          /*document.getElementById('submit').disabled = false;*/ //removed, not approved by TA
           let PassCarTest = theTextbox.value;
           //runs check
           if (PassCarTest.length < 8) {
             //writes to ID
             document.getElementById("password_message").innerHTML = "Password must be 8 characters.";
             //disable submit button
-            document.getElementById('submit').disabled = true;
+            /*document.getElementById('submit').disabled = true;*/ //removed, not approved by TA
           }
         }
 
@@ -208,7 +208,7 @@
           //get ID for password_message, reset message
           document.getElementById("password2_message").innerHTML = "";
           //enable submit button if valid email
-          document.getElementById('submit').disabled = false;
+          /*document.getElementById('submit').disabled = false;*/ //removed, not approved by TA
           let pw1test = document.getElementById("pw1").value
           let pw2test = document.getElementById("pw2").value
           //runs check
@@ -216,7 +216,7 @@
             //writes to ID
             document.getElementById("password2_message").innerHTML = "Passwords do not match.";
             //disable submit button
-            document.getElementById('submit').disabled = true;
+            /*document.getElementById('submit').disabled = true;*/ //removed, not approved by TA
           }
         }
 
@@ -227,7 +227,7 @@
           //get ID for email_message, resent message
           document.getElementById("name_message").innerHTML = "";
           //enable submit button if valid email
-          document.getElementById('submit').disabled = false;
+          /*document.getElementById('submit').disabled = false;*/ //removed, not approved by TA
           //character check from https://stackoverflow.com/questions/17899107/how-to-validate-a-letter-and-whitespace-only-input-via-javascript-regular-expres
           //DONT TOUCH
           var expr2 = /^[A-Za-z ]+$/;
@@ -236,7 +236,7 @@
             //writes to ID
             document.getElementById("name_message").innerHTML = "Invalid name, use only letters and spaces.";
             //disable submit button
-            document.getElementById('submit').disabled = true;
+            /*document.getElementById('submit').disabled = true;*/ //removed, not approved by TA
           }
         }
       </script>

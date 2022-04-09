@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<!--Author, Joshua Chun-->
 
 <head>
 
@@ -39,24 +40,25 @@
   <script>
     //variable to state if there are valid quantities
     //used in checkQuantity function
-    var valid_qty = true
+    /*var valid_qty = true*/ //removed, not approved by TA
 
     //function, if valid_qty is false, disable submit button
-    //*BUG* if user hits tab or backspace, submit button may re-enable when not supposed to
-    function checkValidQty() {
+    //BUG if user hits tab or backspace, submit button may re-enable when not supposed to
+    /*function checkValidQty() {
       if (valid_qty != true) {
         document.getElementById("purchase_submit").disabled = true
       } //disable submit button
       else {
         document.getElementById("purchase_submit").disabled = false
       } //enable submit button
-    }
+    } */ //removed, not approved by TA
+
 
     //Function from Lab11
     //Check if textbox isNonNegInt
     function checkQuantityTextbox(theTextbox) {
       errs = isNonNegInt(theTextbox.value, true);
-      valid_qty = isNonNegInt(theTextbox.value, false);
+      /*valid_qty = isNonNegInt(theTextbox.value, false);*/ //removed, not approved by TA
       document.getElementById(theTextbox.name + '_message').innerHTML = errs.join(", ");
     }
 
@@ -69,6 +71,35 @@
       else if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if it is non-negative
       else if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
       return return_errors ? errors : (errors.length == 0);
+    }
+
+    //from Reece Nagaoka Assignment 1
+    // get the query string which has the form data
+    let params = (new URL(document.location)).searchParams;
+
+    window.onload = function () {
+
+      // form was submitted so check that quantities are valid then redirect to invoice if ok.
+      if (params.has('errors')) {
+        //turns string in object
+        var errors = JSON.parse(params.get('errors'));
+        let err_str = '';
+        //combine errors in one string
+        for (err in errors) {
+          err_str += errors[err] + '\n';
+        }
+        alert(err_str);
+      }
+
+      if (params.has('quantity')) {
+        //turns string in object
+        var quantities = JSON.parse(params.get('quantity'));
+        // put quantities in quantity textboxes
+        for (i in quantities) {
+          order_form[`quantity${i}`].value = quantities[i];
+          checkQuantityTextbox(order_form[`quantity${i}`]);
+        }
+      }
     }
   </script>
 
@@ -158,7 +189,7 @@
                 </div>
             <br>
             <label>Quantity:</label>
-            <input type="text" name="quantity[${[i]}]" value="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
             <br><span id='quantity[${[i]}]_message'></span><br> 
             </div>
             `)
