@@ -64,6 +64,9 @@
     if (params.has('email') == false) {
       location.href = "./login.html" + location.search;
     }
+    
+    //get email from query
+    email = params.get('email');
 
     if (params.has("quantity")) {
       var quantities = JSON.parse(params.get('quantity'));
@@ -162,6 +165,9 @@
       <div class="w3-container w3-text-grey"></div>
 
       <!--Table for invoice-->
+      <p><b><script>
+      document.write(`Invoice being sent to ${email}. Thank you for shopping at HTF!`)
+      </script></p></b><br>
       <table>
         <tr style="background-color: cyan;">
           <td><b>Item</b></td>
