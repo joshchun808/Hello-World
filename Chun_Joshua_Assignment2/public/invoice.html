@@ -82,10 +82,11 @@
         if (quantities[i] > 0) {
           document.write(`
         <tr>
-        <td>${products[i].name}</td>
+        <td><img src=${products[i].image} style="width:75px;height:75px;">
+          <b>${products[i].name}</b></td>
         <td>${Number(quantities[i])}</td>
         <td>$${products[i].price}</td>
-        <td>$${extended_price}</td>
+        <td><b>$${extended_price}</b></td>
         </tr>
         `)
         }
@@ -162,11 +163,11 @@
 
       <!--Table for invoice-->
       <table>
-        <tr>
+        <tr style="background-color: cyan;">
           <td><b>Item</b></td>
           <td><b>Quantity</b></td>
           <td><b>Price</b></td>
-          <td><b>extended price</b></td>
+          <td><b>Extended price</b></td>
         </tr>
 
         <script>
@@ -230,7 +231,7 @@
             <script>document.write(shipping.toFixed(2))</script>
           </td>
         </tr>
-        <tr>
+        <tr style="background-color: paleturquoise;">
           <td><b>Total</b></td>
           <td> </td>
           <td> </td>

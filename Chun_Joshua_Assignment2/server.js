@@ -86,7 +86,7 @@ app.post('/process_form', function (request, response) {
     let params = new URLSearchParams({ "quantity": JSON.stringify(request.body["quantity"]) });
 
     console.log(Object.keys(errors));
-
+    let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
     //Ask if the object is empty or not 
     if (Object.keys(errors).length == 0) {
         for (i in quantities) {
