@@ -1,5 +1,1 @@
-{
-    "dport@hawaii.edu": {"name": "Dan Port", "password": "portspassword"},
-    "kazman@hawaii.edu": {"name": "Rick Kazman", "password": "kazmanpassword"},
-    "itm352@hawaii.edu": {"name": "ITM 352", "password": "grader"}
-}
+{"dport@hawaii.edu":{"name":"Dan Port","password":"portspassword"},"kazman@hawaii.edu":{"name":"Rick Kazman","password":"kazmanpassword"},"itm352@hawaii.edu":{"name":"ITM 352","password":"grader"},"test@test.com":{"name":"test test","password":"12345678"}}
