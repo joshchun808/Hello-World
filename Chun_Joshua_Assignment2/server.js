@@ -20,17 +20,19 @@ app.get("/products_data.js", function (request, response, next) {
 
 const qs = require('querystring');
 
-// Store user information
+//Store user information
 var filename = __dirname + '/user_data.json';
 
+//Pull user data file
 const fs = require("fs");
 if (fs.existsSync(filename)) {
-    // Read filename (from my Lab 14 Ex1b.js)
+    //Read filename (from my Lab 14 Ex1b.js)
     var user_info = fs.readFileSync(filename, 'utf-8');
     var user_data = JSON.parse(user_info);
 }
 else {
     console.log(filename + ' does not exist.');
+    users_data = {};
 }
 
 //Monitors all requests
