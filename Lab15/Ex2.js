@@ -17,9 +17,13 @@ if (fs.existsSync(filename)) {
 var express = require('express');
 var app = express();
 
-//part of lab 15
+//part of lab 15 cookies
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
+//lab 15 sessions
+var session = require('express-session');
+app.use(session({secret: "MySecretKey", resave: true, saveUninitialized: true}));
+
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -38,26 +42,17 @@ app.get("/login", function (request, response) {
     response.send(str);
 });
 
-app.post("/login", function (request, response) {
-    console.log(request.body) //show post body info
-    // Process login form POST and redirect to logged in page if ok, back to login page if not
-    if (typeof users[request.body.username] != 'undefined') {
-        //username exist, get stored password and check if match
-        if (users[request.body.username].password == request.body.password) {
-            response.send(`${request.body.username} is logged in`);
-            return;
-        } else {
-            response.send(`Password invalid <br>${str}`);
-        }
-    } else {
-        response.send(`${request.body.username} doesn't exist <br> ${str}`)
-    }
-});
 
-app.get("/register", function (request, response) {
+app.get("/login", function (request, response) {
+    //check last time user logged in
+    var last_login = 'first visit!';
+    if(typeof request.session.last_login != 'undefined') {
+        last_login = request.session.last_login
+    };
     // Give a simple register form
     str = `
 <body>
+You last logged in on: ${last_login}
 <form action="" method="POST">
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
@@ -68,6 +63,23 @@ app.get("/register", function (request, response) {
 </body>
     `;
     response.send(str);
+});
+
+app.post("/login", function (request, response) {
+    console.log(request.body) //show post body info
+    // Process login form POST and redirect to logged in page if ok, back to login page if not
+    if (typeof users[request.body.username] != 'undefined') {
+        //username exist, get stored password and check if match
+        if (users[request.body.username].password == request.body.password) {
+            request.session.last_login = new Date();
+            response.send(`${request.body.username} is logged in`);
+            return;
+        } else {
+            response.send(`Password invalid <br>${str}`);
+        }
+    } else {
+        response.send(`${request.body.username} doesn't exist <br> ${str}`)
+    }
 });
 
 app.post("/register", function (request, response) {
@@ -95,7 +107,13 @@ app.get("/expire_cookie", function (request, response) {
 
 app.get("/get_cookie", function (request, response) {
     console.log(request.cookies);
-    response.sendStatus(`Welcome to the Use Cookie page ${request.cookies[users_name]}`)
+    response.send(`Welcome to the Use Cookie page ${request.cookies[users_name]}`)
+});
+
+//sessions
+app.get("/use_session", function (request, response) {
+    console.log(request.session);
+    response.send(`welcome, your session ID is ${request.session.id}`)
 });
 
 app.listen(8080, () => console.log(`listening on port 8080`));

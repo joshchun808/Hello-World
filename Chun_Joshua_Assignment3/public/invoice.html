@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<!--Author, Joshua Chun-->
+
+<head>
+
+  <!--START, stylesheet W3 template, dont touch-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .w3-sidebar a {
+      font-family: "Roboto", sans-serif
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .w3-wide {
+      font-family: "Montserrat", sans-serif;
+    }
+  </style>
+</head>
+
+<body class="w3-content" style="max-width:1200px">
+  <!--STOP, stylesheet W3 template, dont touch-->
+
+  <!--script to pull products-->
+  <script src="../products_data.js"></script>
+
+  <!--functions-->
+  <script>
+    //Function from Lab11
+    //Check if textbox isNonNegInt
+    function checkQuantityTextbox(theTextbox) {
+      errs = isNonNegInt(theTextbox.value, true);
+      document.getElementById(theTextbox.name + '_message').innerHTML = errs.join(", ");
+    }
+
+
+    //function to check if NonNegInt
+    function isNonNegInt(q, return_errors = false) {
+      errors = []; // assume no errors at first
+      if (q == '') q = 0; // handle blank inputs as if they are 0
+      if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); // Check if string is a number value
+      else if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if it is non-negative
+      else if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
+      return return_errors ? errors : (errors.length == 0);
+    }
+  </script>
+
+
+  <script>
+    //from lab 12
+    let params = (new URL(document.location)).searchParams;
+    // If user is logged in, email will be in query
+    if (params.has('email') == false) {
+      location.href = "./login.html" + location.search;
+    }
+    
+    //get email from query
+    email = params.get('email');
+
+    if (params.has("quantity")) {
+      var quantities = JSON.parse(params.get('quantity'));
+    } //if statement from Reece Nagaoka, Assignment1, FALL 2021
+
+  </script>
+  <script>
+    //sub total var
+    var sub_total = 0;
+
+    //function to generate the Item rows
+    function generate_item_rows() {
+      for (i = 0; eval("typeof name" + i); i++) {
+        let extended_price = quantities[i] * products[i].price;
+        sub_total += extended_price;
+        if (quantities[i] > 0) {
+          document.write(`
+        <tr>
+        <td><img src=${products[i].image} style="width:75px;height:75px;">
+          <b>${products[i].name}</b></td>
+        <td>${Number(quantities[i])}</td>
+        <td>$${products[i].price}</td>
+        <td><b>$${extended_price}</b></td>
+        </tr>
+        `)
+        }
+      }
+    }
+  </script>
+
+  </head>
+
+  <body class="w3-content" style="max-width:1200px">
+    <!--end stylesheet W3 template-->
+
+
+    <!-- Sidebar/menu W3 template-->
+    <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+      <div class="w3-container w3-display-container w3-padding-16">
+        <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+        <h3 class="w3-wide"><b>HTF</b></h3>
+      </div>
+      <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+        <!--onclick from BrowserHistory6-->
+        <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'index.html'">Home</a>
+        <!--redirect to Home Page-->
+        <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
+          Store</a>
+      </div>
+      <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
+      <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>
+    </nav>
+
+    <!-- Top menu on small screens W3 template-->
+    <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+      <div class="w3-bar-item w3-padding-24 w3-wide">HTF</div>
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i
+          class="fa fa-bars"></i></a>
+    </header>
+
+    <!-- Overlay effect when opening sidebar on small screens W3 template-->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+      id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! W3 template-->
+    <div class="w3-main" style="margin-left:250px">
+
+      <!-- Push down content on small screens W3 template-->
+      <div class="w3-hide-large" style="margin-top:83px"></div>
+
+      <!-- Top header W3 template-->
+      <header class="w3-container w3-xlarge">
+        <p class="w3-left">Home</p>
+        <!--appears at top of page-->
+        <p class="w3-right">
+          <i class="fa fa-shopping-cart w3-margin-right"></i>
+          <i class="fa fa-search"></i>
+        </p>
+      </header>
+
+      <!-- Image header W3 template-->
+      <div class="w3-display-container w3-container">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_U4RWxI28bx0mtXDWh18fPvxkexl8BkRONOelH08QGyOOilhVR3-BiT4IcdrKndqQf8E&usqp=CAU"
+          style="width:100%">
+        <div class="w3-display-topleft w3-text-white" style="padding:24px 48px">
+          <h1 class="w3-jumbo w3-hide-small">High Tech Fruit Store</h1>
+          <!--appears in banner-->
+          <h1 class="w3-hide-large w3-hide-medium">High Tech Fruit Store</h1>
+          <!--appears in banner?-->
+          <h1 class="w3-hide-small">All the Fruit Products You Need</h1>
+          <!--appears in banner-->
+        </div>
+      </div>
+
+      <div class="w3-container w3-text-grey"></div>
+
+      <!--Table for invoice-->
+      <p style="font-size: x-large;"><b><script>
+      document.write(`Invoice being sent to ${email}. Thank you for shopping at HTF!`)
+      </script></p></b>
+      <table>
+        <tr style="background-color: cyan;">
+          <td><b>Item</b></td>
+          <td><b>Quantity</b></td>
+          <td><b>Price</b></td>
+          <td><b>Extended price</b></td>
+        </tr>
+
+        <script>
+          generate_item_rows(); //calls the generate_item_rows function
+        </script>
+        <script>
+          // Tax Rate
+          var tax_rate = 0.0575
+
+          // Shiping Rate
+          var shipping = 0
+
+          // Compute Cost
+          var tax_total = sub_total * tax_rate
+          var total_cost = sub_total + tax_total + shipping
+
+          // Compute Shipping
+          if (sub_total > 100) {
+            shipping = sub_total * 0.05
+          }
+          else if (sub_total < 50) {
+            shipping = 2
+          }
+          else (sub_total < 100)[
+            shipping = 5
+          ]
+        </script>
+
+        <tr>
+          <td> </td>
+        </tr>
+        <!--spacer-->
+        <tr>
+          <td> </td>
+        </tr>
+        <!--spacer-->
+        <tr>
+          <td>Sub-total</td>
+          <td> </td>
+          <td> </td>
+          <!--spacer-->
+          <td>$
+            <script>document.write(sub_total)</script>
+          </td>
+        </tr>
+        <tr>
+          <td>Tax @ 5.75%</td>
+          <td> </td>
+          <td> </td>
+          <!--spacer-->
+          <td>$
+            <script>document.write(tax_total.toFixed(2))</script>
+          </td>
+        </tr>
+        <tr>
+          <td>Shipping</td>
+          <td> </td>
+          <td> </td>
+          <!--spacer-->
+          <td>$
+            <script>document.write(shipping.toFixed(2))</script>
+          </td>
+        </tr>
+        <tr style="background-color: paleturquoise;">
+          <td><b>Total</b></td>
+          <td> </td>
+          <td> </td>
+          <!--spacer-->
+          <td><b>$
+              <script>document.write(total_cost.toFixed(2))</script>
+            </b></td>
+        </tr>
+      </table>
+      <p><b>OUR SHIPPING POLICY IS:A subtotal $0 - $49.99 will be $2 shipping</b></p>
+      <p><b>A subtotal $50 - $99.99 will be $5 shipping</b></p>
+      <p><b>Subtotals over $100 will be charged 5% of the subtotal amount</b></p>
+
+      <!-- DONT TOUCH BELOW, W3 template-->
+      <!-- Footer W3 template-->
+      <footer class="w3-padding-64 w3-light-grey w3-small w3-center" id="footer">
+        <div class="w3-row-padding">
+          <div class="w3-col s4">
+            <h4>Contact</h4>
+            <p>Questions? Go ahead.</p>
+            <form action="/action_page.php" target="_blank">
+              <p><input class="w3-input w3-border" type="text" placeholder="Name" name="Name" required></p>
+              <p><input class="w3-input w3-border" type="text" placeholder="Email" name="Email" required></p>
+              <p><input class="w3-input w3-border" type="text" placeholder="Subject" name="Subject" required></p>
+              <p><input class="w3-input w3-border" type="text" placeholder="Message" name="Message" required></p>
+              <button type="button" class="w3-button w3-block w3-black">Send</button>
+              <!-- Button type so it doenst do anything -->
+            </form>
+          </div>
+
+
+          <!--part of footer W3 template-->
+          <div class="w3-col s4 w3-justify">
+            <h4>Store</h4>
+            <p><i class="fa fa-fw fa-map-marker"></i> High Tech Fruit Store</p>
+            <p><i class="fa fa-fw fa-phone"></i> 555-555-5555</p>
+            <p><i class="fa fa-fw fa-envelope"></i> HTF@exmail.com</p>
+            <h4>We accept</h4>
+            <p><i class="fa fa-fw fa-cc-amex"></i> Amex</p>
+            <p><i class="fa fa-fw fa-credit-card"></i> Credit Card</p>
+            <br>
+            <i class="fa fa-facebook-official w3-hover-opacity w3-large"></i>
+            <i class="fa fa-instagram w3-hover-opacity w3-large"></i>
+            <i class="fa fa-snapchat w3-hover-opacity w3-large"></i>
+            <i class="fa fa-pinterest-p w3-hover-opacity w3-large"></i>
+            <i class="fa fa-twitter w3-hover-opacity w3-large"></i>
+            <i class="fa fa-linkedin w3-hover-opacity w3-large"></i>
+          </div>
+        </div>
+      </footer>
+
+      <!--W3 template bottom banner, can remove-->
+      <div class="w3-black w3-center w3-padding-24">Powered by <a href="https://www.w3schools.com/w3css/default.asp"
+          title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a></div>
+
+      <!-- End page content -->
+    </div>
+
+
+    </div>
+    </div>
+    </div>
+
+    <script>
+      //ALL SCRIPTS BELOW ARE FROM W3 TEMPLATE
+      // Accordion 
+      function myAccFunc() {
+        var x = document.getElementById("demoAcc");
+        if (x.className.indexOf("w3-show") == -1) {
+          x.className += " w3-show";
+        } else {
+          x.className = x.className.replace(" w3-show", "");
+        }
+      }
+
+      // Click on the "Jeans" link on page load to open the accordion for demo purposes
+      document.getElementById("myBtn").click();
+
+
+      // Open and close sidebar
+      function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+      }
+
+      function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+      }
+    </script>
+
+  </body>
+
+</html>
