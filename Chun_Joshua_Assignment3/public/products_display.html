@@ -101,6 +101,126 @@
         }
       }
     }
+
+    /*
+    //function to display products, use with product keys
+    //NOT WORKING, function not changing with properties 
+    function display_products(product_key) {
+      //Code from WOD SmartPhonePProducts3
+        //Loop to display products and quantity box
+        //qty_textbox from Lab11, quantity enter
+        var products = products.product_key
+        for (i = 0; i < products.length; i++) {
+          document.write(`
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                <img src=${products[i].image} style="width:200px;height:200px;">
+                <p>${products[i].name}<br>
+                ${products[i].quantity_available} available<br>
+                <b>$${products[i].price}</b></p>
+                </div>
+            <br>
+            <label>Quantity:</label>
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <br><span id='quantity[${[i]}]_message'></span><br> 
+            </div>
+            `)
+        }
+    }*/
+
+    //------------------------Functions to display products------------------------------
+    /*function display_fruit () {
+      //Code from WOD SmartPhonePProducts3
+        //Loop to display products and quantity box
+        //qty_textbox from Lab11, quantity enter
+        for (i = 0; i < products.length; i++) {
+          if (i === 8) { break;}
+          document.write(`
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                <img src=${products[i].image} style="width:200px;height:200px;">
+                <p>${products[i].name}<br>
+                ${products[i].quantity_available} available<br>
+                <b>$${products[i].price}</b></p>
+                </div>
+            <br>
+            <label>Quantity:</label>
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <br><span id='quantity[${[i]}]_message'></span><br> 
+            </div>
+            `)
+        }
+    }
+
+    function display_veg () {
+      //Code from WOD SmartPhonePProducts3
+        //Loop to display products and quantity box
+        //qty_textbox from Lab11, quantity enter
+        for (i = 8; i < products.length; i++) {
+          if (i === 16) { break;}
+          document.write(`
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                <img src=${products[i].image} style="width:200px;height:200px;">
+                <p>${products[i].name}<br>
+                ${products[i].quantity_available} available<br>
+                <b>$${products[i].price}</b></p>
+                </div>
+            <br>
+            <label>Quantity:</label>
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <br><span id='quantity[${[i]}]_message'></span><br> 
+            </div>
+            `)
+        }
+    }
+
+    function display_berries () {
+      //Code from WOD SmartPhonePProducts3
+        //Loop to display products and quantity box
+        //qty_textbox from Lab11, quantity enter
+        for (i = 16; i < products.length; i++) {
+          if (i === 24) { break;}
+          document.write(`
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                <img src=${products[i].image} style="width:200px;height:200px;">
+                <p>${products[i].name}<br>
+                ${products[i].quantity_available} available<br>
+                <b>$${products[i].price}</b></p>
+                </div>
+            <br>
+            <label>Quantity:</label>
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <br><span id='quantity[${[i]}]_message'></span><br> 
+            </div>
+            `)
+        }
+    }
+
+    function display_nuts () {
+      //Code from WOD SmartPhonePProducts3
+        //Loop to display products and quantity box
+        //qty_textbox from Lab11, quantity enter
+        for (i = 24; i < products.length; i++) {
+          if (i === 36) { break;}
+          document.write(`
+            <div class="w3-col l3 s6">
+                <div class="w3-container">
+                <img src=${products[i].image} style="width:200px;height:200px;">
+                <p>${products[i].name}<br>
+                ${products[i].quantity_available} available<br>
+                <b>$${products[i].price}</b></p>
+                </div>
+            <br>
+            <label>Quantity:</label>
+            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <br><span id='quantity[${[i]}]_message'></span><br> 
+            </div>
+            `)
+        }
+    }*/
+
   </script>
 
   <!-- Sidebar/menu W3 template-->
@@ -111,10 +231,13 @@
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
       <!--onclick from BrowserHistory6-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'index.html'">Home</a>
       <!--redirect to Home Page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'index.html'">Home</a>
+      <!--current tab, does nothing-->
       <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
         Store</a>
+        <!--Test Button-->
+        <a class="w3-bar-item w3-button" onclick="">Test</a>
       </a>
     </div>
     <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
@@ -164,9 +287,7 @@
     </div>
 
     <div class="w3-container w3-text-grey">
-      <p>
-        <script>document.write(products.length)</script> items
-      </p>
+      <p>8 items</p>
       <!--appears above products, can remove-->
     </div>
 
@@ -174,11 +295,12 @@
     <form name="quantity_form" action="/process_form" method="post">
       <!--Opening tag for quantity form-->
 
-      <script>
+      <script id="display_prods">
         //Code from WOD SmartPhonePProducts3
         //Loop to display products and quantity box
         //qty_textbox from Lab11, quantity enter
         for (i = 0; i < products.length; i++) {
+          if (i === 8) { break;}
           document.write(`
             <div class="w3-col l3 s6">
                 <div class="w3-container">
@@ -194,7 +316,6 @@
             </div>
             `)
         }
-
       </script>
       <br>
       <input name="purchase_submit" type="submit" value="Purchase" id="purchase_submit">
