@@ -114,11 +114,11 @@
       <!--onclick from BrowserHistory6-->
       <!--redirect to Home Page-->
       <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'index.html'">Home</a>
+      <!--redirect to fruits page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display.html'">Fruits</a>
       <!--current tab, does nothing-->
       <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Fruits</a>
-      <!--redirect to vegetable page-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display2.html'">Vegetables</a>
+        Vegetables</a>
       <!--redirect to berries page-->
       <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display3.html'">Berries</a>
       <!--redirect to nuts page-->
@@ -180,10 +180,10 @@
       <!--Opening tag for quantity form-->
 
       <script id="display_prods">
-      //Code from WOD SmartPhonePProducts3
+        //Code from WOD SmartPhonePProducts3
         //Loop to display products and quantity box
         //qty_textbox from Lab11, quantity enter
-        var products = products.fruits
+        var products = products.veg
         for (i = 0; i < products.length; i++) {
           document.write(`
             <div class="w3-col l3 s6">
@@ -196,7 +196,7 @@
             <br>
             <label>Quantity:</label>
             <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
-            <br><span id='quantity[${[i]}]_message'></span><br>
+            <br><span id='quantity[${[i]}]_message'></span><br> 
             </div>
             `)
         }

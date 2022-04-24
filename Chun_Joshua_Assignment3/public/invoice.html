@@ -64,7 +64,7 @@
     if (params.has('email') == false) {
       location.href = "./login.html" + location.search;
     }
-    
+
     //get email from query
     email = params.get('email');
 
@@ -113,8 +113,14 @@
         Home
       </a>
       <!--onclick from BrowserHistory6-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display.html'">Store</a>
-      <!--redirect to store page-->
+      <!--redirect to fruit page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display.html'">Fruit</a>
+      <!--redirect to vegetable page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display2.html'">Vegetables</a>
+      <!--redirect to berries page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display3.html'">Berries</a>
+      <!--redirect to nuts page-->
+      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display4.html'">Nuts</a>
     </div>
     <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
     <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>
@@ -165,9 +171,11 @@
       <div class="w3-container w3-text-grey"></div>
 
       <!--Table for invoice-->
-      <p style="font-size: x-large;"><b><script>
-      document.write(`Invoice being sent to ${email}. Thank you for shopping at HTF!`)
-      </script></p></b>
+      <p style="font-size: x-large;"><b>
+          <script>
+            document.write(`Invoice being sent to ${email}. Thank you for shopping at HTF!`)
+          </script>
+      </p></b>
       <table>
         <tr style="background-color: cyan;">
           <td><b>Item</b></td>
@@ -191,14 +199,14 @@
           var total_cost = sub_total + tax_total + shipping
 
           // Compute Shipping
-          if (sub_total > 100) {
-            shipping = sub_total * 0.05
+          if (sub_total > 1000) {
+            shipping = sub_total * 0.10
           }
-          else if (sub_total < 50) {
-            shipping = 2
+          else if (sub_total < 500) {
+            shipping = 50
           }
-          else (sub_total < 100)[
-            shipping = 5
+          else (sub_total < 1000)[
+            shipping = 100
           ]
         </script>
 
@@ -247,9 +255,9 @@
             </b></td>
         </tr>
       </table>
-      <p><b>OUR SHIPPING POLICY IS:A subtotal $0 - $49.99 will be $2 shipping</b></p>
-      <p><b>A subtotal $50 - $99.99 will be $5 shipping</b></p>
-      <p><b>Subtotals over $100 will be charged 5% of the subtotal amount</b></p>
+      <p><b>SHIPPING POLICY:A subtotal $0 - $500 will be $50 shipping</b></p>
+      <p><b>A subtotal $500 - $999.99 will be $100 shipping</b></p>
+      <p><b>Subtotals over $1000 will be charged 10% of the subtotal amount</b></p>
 
       <!-- DONT TOUCH BELOW, W3 template-->
       <!-- Footer W3 template-->
