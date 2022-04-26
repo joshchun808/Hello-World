@@ -49,10 +49,16 @@ app.get("/login", function (request, response) {
     if(typeof request.session.last_login != 'undefined') {
         last_login = request.session.last_login
     };
+
+    var welcome_msg = `Welcome, please log in.`
+    if(typeof request.cookies.username != "undefined") {
+        welcome_msg = `Welcome ${request.cookies.username} you are logged in.`
+    }
     // Give a simple register form
     str = `
-<body>
-You last logged in on: ${last_login}
+<body> 
+${welcome_msg}
+You last logged in on: ${last_login}<br>
 <form action="" method="POST">
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
@@ -72,6 +78,7 @@ app.post("/login", function (request, response) {
         //username exist, get stored password and check if match
         if (users[request.body.username].password == request.body.password) {
             request.session.last_login = new Date();
+            response.cookie('username', request.body.username)
             response.send(`${request.body.username} is logged in`);
             return;
         } else {
@@ -79,7 +86,7 @@ app.post("/login", function (request, response) {
         }
     } else {
         response.send(`${request.body.username} doesn't exist <br> ${str}`)
-    }
+    } 
 });
 
 app.post("/register", function (request, response) {
@@ -114,6 +121,7 @@ app.get("/get_cookie", function (request, response) {
 app.get("/use_session", function (request, response) {
     console.log(request.session);
     response.send(`welcome, your session ID is ${request.session.id}`)
+    request.session.destroy();
 });
 
 app.listen(8080, () => console.log(`listening on port 8080`));
