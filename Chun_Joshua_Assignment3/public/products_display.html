@@ -198,7 +198,10 @@
     </div>
 
     <div class="w3-container w3-text-grey">
-      <p>8 items</p>
+      <p><script>
+        var products = products[this_products_key];
+        document.write(products.length);
+        </script> items</p>
       <!--appears above products, can remove-->
     </div>
 
@@ -210,7 +213,7 @@
         //Code from WOD SmartPhonePProducts3
         //Loop to display products and quantity box
         //qty_textbox from Lab11, quantity enter
-        var products = products[this_products_key];
+        //var products = products[this_products_key];
         for (i = 0; i < products.length; i++) {
           document.write(`
             <div class="w3-col l3 s6">
