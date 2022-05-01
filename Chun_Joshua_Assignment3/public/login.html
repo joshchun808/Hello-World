@@ -35,6 +35,16 @@
   <!--script to pull products-->
   <script src="../products_data.js"></script>
 
+  <script>
+    //from assignment 3 workshop
+    // This function makes a navigation bar from a products_data object
+    function nav_bar(products) {
+      // This makes a navigation bar to other product pages
+      for (let products_key in products) {
+        document.write(`<a href="./products_display.html?products_key=${products_key}" class="w3-bar-item w3-button">${products_key}</a>`);
+      }
+    }
+  </script>
 
   </head>
   <!--DONT TOUCH, part of stylesheet W3 template-->
@@ -49,19 +59,11 @@
         <h3 class="w3-wide"><b>HTF</b></h3>
       </div>
       <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-        <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-          Home
-        </a>
-        <!--onclick from BrowserHistory6-->
-        <!--redirect to fruit page-->
-        <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display.html'">Fruit</a>
-        <!--redirect to vegetable page-->
-        <a href="#" class="w3-bar-item w3-button"
-          onclick="window.location.href = 'products_display2.html'">Vegetables</a>
-        <!--redirect to berries page-->
-        <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display3.html'">Berries</a>
-        <!--redirect to nuts page-->
-        <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display4.html'">Nuts</a>
+        <!--Home, current page-->
+        <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+          id="myBtn">Home</a>
+        <!--Generate product navs-->
+        <script>nav_bar(products)</script>
       </div>
       <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
       <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>
@@ -168,24 +170,26 @@
 
       <!--Login-->
       <span><br>
-        <script>
-          document.write(`<form action="/login${location.search}" method="POST">`)
-        </script>
-        <p>Login to existing account</p>
-        <b><span id="email_message" style="color: red;"></span>
-          <span id="password_message" style="color: red;"></span></b><br>
-        <input type="text" id="email" name="email" size="40" placeholder="enter email"
-          onkeyup="ValidateEmail(this)"><br />
-        <input type="password" id="pw" name="password" size="40" placeholder="enter password"
-          onkeyup="PassCarCheck(this)"><br />
-        <input type="submit" value="Submit" id="submit">
-        </form>
-        <br>
-        <button type="button" onclick="window.location.href = 'newpw.html' + document.location.search;">Change
-          Password</button>
-        <button type="button"
-          onclick="window.location.href = 'register.html' + document.location.search;">Register</button>
-        <br>
+        <center>
+          <script>
+            document.write(`<form action="/login${location.search}" method="POST">`)
+          </script>
+          <p>Login to existing account</p>
+          <b><span id="email_message" style="color: red;"></span>
+            <span id="password_message" style="color: red;"></span></b><br>
+          <input type="text" id="email" name="email" size="40" placeholder="enter email"
+            onkeyup="ValidateEmail(this)"><br />
+          <input type="password" id="pw" name="password" size="40" placeholder="enter password"
+            onkeyup="PassCarCheck(this)"><br />
+          <input type="submit" value="Submit" id="submit" style="background-color: dodgerblue;">
+          </form>
+          <br>
+          <button type="button" onclick="window.location.href = 'newpw.html' + document.location.search;"
+            style="background-color: dodgerblue;">Change
+            Password</button>
+          <button type="button" onclick="window.location.href = 'register.html' + document.location.search;"
+            style="background-color: dodgerblue;">Register</button>
+        </center><br>
       </span>
 
 

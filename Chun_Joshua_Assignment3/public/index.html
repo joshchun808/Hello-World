@@ -33,6 +33,32 @@
 <body class="w3-content" style="max-width:1200px">
   <!--end stylesheet W3 template-->
 
+  <!--script to pull products-->
+  <script src="../products_data.js"></script>
+
+  <script>
+    //from assignment 3 workshop
+    // This function makes a navigation bar from a products_data object
+    function nav_bar(products) {
+      // This makes a navigation bar to other product pages
+      for (let products_key in products) {
+        document.write(`<a href="./products_display.html?products_key=${products_key}" class="w3-bar-item w3-button">${products_key}</a>`);
+      }
+    }
+
+    function nav_login() {
+      //let value temp, replace with cookie check (maybe session check?)
+      let login_value = false
+      //if logged in, show log out
+      if (login_value == true) {
+        document.write(`<a href="#" class="w3-bar-item w3-button">Log Out</a>`);
+      }
+      //if logged out, show login
+      else {
+        document.write(`<a href="./login.html" class="w3-bar-item w3-button">Login</a>`);
+      }
+    }
+  </script>
 
   <!-- Sidebar/menu W3 template-->
   <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
@@ -41,18 +67,11 @@
       <h3 class="w3-wide"><b>HTF</b></h3>
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Home
-      </a>
-      <!--onclick from BrowserHistory6-->
-      <!--redirect to fruit page-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display.html'">Frit</a>
-      <!--redirect to vegetable page-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display2.html'">Vegetables</a>
-      <!--redirect to berries page-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display3.html'">Berries</a>
-      <!--redirect to nuts page-->
-      <a href="#" class="w3-bar-item w3-button" onclick="window.location.href = 'products_display4.html'">Nuts</a>
+      <!--Home, current page-->
+      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+        id="myBtn">Home</a>
+      <!--Generate product navs-->
+      <script>nav_bar(products); nav_login()</script>
     </div>
     <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
     <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>

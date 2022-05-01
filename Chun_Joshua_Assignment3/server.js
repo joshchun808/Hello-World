@@ -20,13 +20,14 @@ app.get("/products_data.js", function (request, response, next) {
 
 const qs = require('querystring');
 
-//Store user information
+//store user information
 var filename = __dirname + '/user_data.json';
 
-//Pull user data file
+//pull user data file
 const fs = require("fs");
 if (fs.existsSync(filename)) {
-    //Read filename (from my Lab 14 Ex1b.js)
+    //read filename 
+    //from Lab 14
     var user_info = fs.readFileSync(filename, 'utf-8');
     var user_data = JSON.parse(user_info);
 }
@@ -35,7 +36,7 @@ else {
     users_data = {};
 }
 
-//Monitors all requests
+//monitors all requests
 app.all('*', function (request, response, next) {
     console.log(request.method + ' to path ' + request.path);
     next();
@@ -55,32 +56,33 @@ function isNonNegInt(q, returnErrors = false) {
     return returnErrors ? errors : (errors.length == 0);
 }
 
-//From lab 12, access inputted data from products.js
+//from lab 12
+//get inputted data from products.js
 app.use(express.urlencoded({ extended: true }));
 
-//Get quantity data from order form and check it
+//get quantity data from form and check
 app.post('/process_form', function (request, response) {
     console.log(request.body); //Prof suggestion
     var quantities = request.body["quantity"];
-    //Assume no errors or quantities for now 
+    //assume no errors or quantities for now 
     var errors = {};
     var check_quantities = false;
-    //Check quantities are non-negative integers 
+    //check quantities are non-negative integers 
     for (i in quantities) {
-        //Check quantity 
+        //check quantity 
         if (isNonNegInt(quantities[i]) == false) {
             errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}s`;
         }
-        //Check if quantities were selected 
+        //check if quantities were selected 
         if (quantities[i] > 0) {
             check_quantities = true;
         }
-        //Check if quantity desired is available 
+        //check if quantity desired is available 
         if (quantities[i] > products[i].quantity_available) {
             errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name}s available.`;
         }
     }
-    //Check if quantity is selected
+    //check if quantity is selected
     if (!check_quantities) {
         errors['no_quantities'] = `Please select some items!`;
     }
@@ -89,14 +91,14 @@ app.post('/process_form', function (request, response) {
 
     console.log(Object.keys(errors));
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
-    //Ask if the object is empty or not 
+    //check if the object is empty or not 
     if (Object.keys(errors).length == 0) {
         for (i in quantities) {
             products[i].quantity_available -= Number(quantities[i]);
         }
         response.redirect('./login.html?' + params.toString());
     }
-    //Otherwise go back to products_display.html 
+    //else, go back to products_display.html 
     else {
         let errs_obj = { "errors": JSON.stringify(errors) };
         console.log(qs.stringify(qty_obj));
@@ -105,63 +107,62 @@ app.post('/process_form', function (request, response) {
 
 });
 
-//Taken from my Lab 14 Ex4.js and modified
-//For login
+//from Lab 14 and modified
+//login post
 app.post("/login", function (request, response) {
     var errors = {};
 
-    //Process login form POST and redirect to logged in page if ok, back to login page if not
-    //Make it so capitalization is irrelevant for email
+    //process login form POST, redirect to invoice if ok, back to login page if not
+    //make capitalization irrelevant for email
     let login_email = request.body['email'].toLowerCase();
     let login_password = request.body['password'];
 
-    //Check if email exists
+    //check if email exists
     if (typeof user_data[login_email] != 'undefined') {
-        //Then checks password entered matches stored password
+        //checks password entered matches stored password
         if (user_data[login_email].password == login_password) {
-            //Redirects to the invoice page and displays items purchased
+            //redirects to invoice page
             request.query['email'] = login_email;
             response.redirect('./invoice.html?' + qs.stringify(request.query));
             return;
         }
         else {
-            //If password is incorrect
+            //error if password is incorrect
             errors = 'Incorrect password';
         }
     }
     else {
-        //If email has not been created
+        //error if email has not been created
         errors = `${login_email} does not exist`;
     }
 
-    //If there are errors, send back to login page with errors
+    //if any errors, send back to login page with errors
     request.query['email'] = login_email;
     request.query['errors'] = errors;
     response.redirect(`./login.html?` + qs.stringify(request.query));
 });
 
-//Taken from my Lab 14 Ex.4.js and modified
-//For register
+//from Lab 14 and modified
+//register post
 app.post("/register", function (request, response) {
     var errors = {};
     let email = request.body['email'].toLowerCase();
-    let name = request.query['name'];
+    let name = request.body['name'];
 
-    //Process a simple register form
-    //Make it so capitalization is irrelevant for email
+    //make capitalization irrelevant for email
     var new_email = request.body['email'].toLowerCase();
 
-    //Require a specific email format
+    //require specific email format
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(request.body.email) == false) {
         errors = 'Please enter a valid email address';
     }
 
-    //Require a unique email
+    //require a unique email
     if (typeof user_data[new_email] != 'undefined') {
         errors = 'Email is already taken.';
     }
 
-    //Name Check
+    //name Check
     if (typeof request.body.name != 'undefined') {
         if (/^[A-Za-z ]+$/.test(request.body.name) == false) {
             errors = 'Please enter a valid name.';
@@ -170,35 +171,35 @@ app.post("/register", function (request, response) {
         errors = 'Please enter a name.';
     }
 
-    //Require a minimum of 8 characters
+    //require a minimum of 8 characters for password
     if (request.body.new_password.length < 8) {
         errors = 'Password must have a minimum of 8 characters.';
     }
 
-    //Confirm that both passwords were entered correctly
+    //confirm that both passwords match
     if (request.body.new_password !== request.body.repeat_password) {
         errors = 'Both passwords must match';
     }
 
     let params = new URLSearchParams(request.query);
 
-    //If errors is empty
+    //if errors is empty
     if (JSON.stringify(errors) == '{}') {
-        //Write data and send to invoice.html
+        //write data and send to user_data.html
         user_data[new_email] = {};
         user_data[new_email].name = request.body.name;
         user_data[new_email].password = request.body.new_password;
 
-        //Writes user information into file
+        //writes user information into file
         fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-        //Add email to query
+        //add email to query
         params.append('email', request.body.email);
         response.redirect('./invoice.html?' + params.toString());
         return;
     }
     else {
-        //If there are errors, send back to register page with errors
+        //if there are errors, send back to register page with errors
         request.query['email'] = email;
         request.query['name'] = name;
         request.query['errors'] = errors;
@@ -206,58 +207,58 @@ app.post("/register", function (request, response) {
     }
 });
 
-//Taken from my Lab 14 Ex4.js and modified
-//For new password
+//from Lab 14 and modified
+//new password post
 app.post("/newpw", function (request, response) {
     var errors = {};
 
-    //Process login form POST and redirect to logged in page if ok, back to login page if not
-    //Make it so capitalization is irrelevant for email
+    //process login form POST, redirect to invoice if ok, back to login page if not
+    //make capitalization irrelevant for email
     let login_email = request.body['email'].toLowerCase();
     let login_password = request.body['password'];
 
-    //Check if email exists
+    //check if email exists
     if (typeof user_data[login_email] != 'undefined') {
-        //Then checks password entered matches stored password
+        //checks password entered matches stored password
         if (user_data[login_email].password == login_password) {
 
-            //Require a minimum of 8 characters
+            //require a minimum of 8 characters for password
             if (request.body.new_password.length < 8) {
                 errors = 'Password must have a minimum of 8 characters.';
             }
 
-            //Confirm that both passwords were entered correctly
+            //confirm that both passwords match
             if (request.body.new_password !== request.body.repeat_password) {
                 errors = 'Both passwords must match';
             }
 
             let params = new URLSearchParams(request.query);
 
-            //If errors is empty
+            //if errors is empty
             if (JSON.stringify(errors) == '{}') {
-                //Write data and send to invoice.html
+                //write data and send to user_data.html
                 user_data[login_email].password = request.body.new_password
 
-                //Writes user information into file
+                //writes user information into file
                 fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-                //Add email to query
+                //add email to query
                 params.append('email', request.body.email);
                 response.redirect('./invoice.html?' + params.toString());
                 return;
             }
         }
         else {
-            //If password is incorrect
+            //error if password is incorrect
             errors = 'Incorrect password';
         }
     }
     else {
-        //If email has not been created
+        //error if email has not been created
         errors = `${login_email} does not exist`;
     }
 
-    //If there are errors, send back to new password page with errors
+    //if there are errors, send back to new password page with errors
     request.query['email'] = login_email;
     request.query['errors'] = errors;
     response.redirect(`./newpw.html?` + qs.stringify(request.query));
