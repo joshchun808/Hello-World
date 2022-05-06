@@ -1,13 +1,19 @@
 //Author, Joshua Chun
 //Based on server.js from Reece Nagaoka, Assignment1, FALL 2021
+//Individual additional requirements: IR1; Maintain last product page visited by user
 
 //from class provided server.js
 var express = require('express');
 var app = express();
-app.all('*', function (request, response, next) {
-    console.log(request.method + 'to path' + request.path);
-    next();
-});
+
+//loads sessions
+var session = require('express-session');
+
+
+//part of lab 15
+//enables cookies
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 //pull products_data
 var products = require(__dirname + '/products_data.json');
@@ -36,13 +42,6 @@ else {
     users_data = {};
 }
 
-//monitors all requests
-app.all('*', function (request, response, next) {
-    console.log(request.method + ' to path ' + request.path);
-    next();
-});
-
-
 //code from lab 11
 //helps to check validate data
 function isNonNegInt(q, returnErrors = false) {
@@ -59,10 +58,29 @@ function isNonNegInt(q, returnErrors = false) {
 //from lab 12
 //get inputted data from products.js
 app.use(express.urlencoded({ extended: true }));
+app.use(session({secret: "MySecretKey", resave: true, saveUninitialized: true})); //sessions
+
+//used to view session "cart" data
+app.post("/get_cart", function (request, response) {
+    response.json(request.session.cart);
+});
+
+//monitors all requests
+app.all('*', function (request, response, next) {
+    //if cart is not created, create one
+    if(typeof request.session.cart == 'undefined') {
+    request.session.cart = {};
+    }
+        console.log(request.method + 'to path' + request.path);
+    next();
+});
 
 //get quantity data from form and check
 app.post('/process_form', function (request, response) {
     console.log(request.body); //Prof suggestion
+    console.log(request.session); //check session data
+    var this_products_key = request.body.products_key;
+
     var quantities = request.body["quantity"];
     //assume no errors or quantities for now 
     var errors = {};
@@ -71,15 +89,15 @@ app.post('/process_form', function (request, response) {
     for (i in quantities) {
         //check quantity 
         if (isNonNegInt(quantities[i]) == false) {
-            errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}s`;
+            errors['quantity_' + i] = `Please choose a valid quantity for ${products[this_products_key][i].name}s`;
         }
         //check if quantities were selected 
         if (quantities[i] > 0) {
             check_quantities = true;
         }
-        //check if quantity desired is available 
-        if (quantities[i] > products[i].quantity_available) {
-            errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name}s available.`;
+        //Check if quantity desired is available 
+        if (quantities[i] > products[this_products_key][i].quantity_available) {
+            errors['available_' + i] = `We don't have ${(quantities[i])} ${products[this_products_key][i].name}s available.`;
         }
     }
     //check if quantity is selected
@@ -91,20 +109,32 @@ app.post('/process_form', function (request, response) {
 
     console.log(Object.keys(errors));
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
+    
     //check if the object is empty or not 
     if (Object.keys(errors).length == 0) {
         for (i in quantities) {
-            products[i].quantity_available -= Number(quantities[i]);
+            products[this_products_key][i].quantity_available -= Number(quantities[i]);
         }
-        response.redirect('./login.html?' + params.toString());
+        errors['added_to_cart'] = `Items added to cart`;
+        let errs_obj = { "errors": JSON.stringify(errors) };
+        request.session.cart[this_products_key] = request.body["quantity"]; //set product data to session cart
+        console.log(request.session); //show session data
+        response.redirect(`./products_display.html?products_key=${this_products_key}` + '&' + qs.stringify(errs_obj));
     }
     //else, go back to products_display.html 
     else {
         let errs_obj = { "errors": JSON.stringify(errors) };
         console.log(qs.stringify(qty_obj));
-        response.redirect('./products_display.html?' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
+        response.redirect(`./products_display.html?products_key=${this_products_key}` + '&' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
     }
 
+});
+
+//logout
+app.post("/logout", function (request, response) {
+    request.session.cart[user_email] = undefined; //set email to session cart
+    request.session.cart[user_name] = undefined //set email to session cart
+    response.redirect(`./index.html`)
 });
 
 //from Lab 14 and modified
@@ -121,9 +151,9 @@ app.post("/login", function (request, response) {
     if (typeof user_data[login_email] != 'undefined') {
         //checks password entered matches stored password
         if (user_data[login_email].password == login_password) {
-            //redirects to invoice page
-            request.query['email'] = login_email;
-            response.redirect('./invoice.html?' + qs.stringify(request.query));
+            request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
+            request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+            response.redirect(`./index.html`); //IR1, Redirect to last page
             return;
         }
         else {
@@ -193,9 +223,9 @@ app.post("/register", function (request, response) {
         //writes user information into file
         fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-        //add email to query
-        params.append('email', request.body.email);
-        response.redirect('./invoice.html?' + params.toString());
+        request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
+        request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+        response.redirect(`./index.html`); //IR1, Redirect to last page
         return;
     }
     else {
@@ -242,9 +272,9 @@ app.post("/newpw", function (request, response) {
                 //writes user information into file
                 fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-                //add email to query
-                params.append('email', request.body.email);
-                response.redirect('./invoice.html?' + params.toString());
+                request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
+                request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+                response.redirect(`./index.html`); //IR1, Redirect to last page
                 return;
             }
         }
@@ -262,6 +292,128 @@ app.post("/newpw", function (request, response) {
     request.query['email'] = login_email;
     request.query['errors'] = errors;
     response.redirect(`./newpw.html?` + qs.stringify(request.query));
+});
+
+//button to checkout on invoice.html
+app.get("/checkout", function (request, response) {
+    // Generate HTML invoice string
+    var invoice_str = `Thank you for your order!
+    <table>
+    <tr style="background-color: cyan;">
+    <td><b>Item</b></td>
+    <td><b>Quantity</b></td>
+    <td><b>Price</b></td>
+    <td><b>Extended price</b></td>
+    </tr>`;
+
+    //from invoice
+    var sub_total = 0;
+    var cart = request.session.cart;
+    for (this_products_key in cart) {
+        for (i in cart[this_products_key]) {
+        let quantities = cart[this_products_key];
+        let extended_price = quantities[i] * products[this_products_key][i].price;
+        sub_total += extended_price;
+        if (quantities[i] > 0) {
+            //adds products to invoice string variable
+            invoice_str +=` 
+          <tr>
+          <td><img src=${products[this_products_key][i].image} style="width:75px;height:75px;">
+            <b>${products[this_products_key][i].name}</b></td>
+          <td style="text-align:center">${Number(quantities[i])}</td>
+          <td>$${products[this_products_key][i].price}</td>
+          <td><b>$${extended_price}</b></td>
+          </tr>
+          `
+          }
+          }
+    }
+
+        //calculations
+        // Tax Rate
+        var tax_rate = 0.0575
+
+        // Shiping Rate
+        var shipping = 0
+
+        // Compute Cost
+        var tax_total = sub_total * tax_rate
+        var total_cost = sub_total + tax_total + shipping
+
+        // Compute Shipping
+        if (sub_total > 1000) {
+          shipping = sub_total * 0.15
+        }
+        else if (sub_total < 500) {
+          shipping = 50
+        }
+        else (sub_total < 1000)[
+          shipping = 100
+        ]
+
+        //adds end of table to invoice string variable
+        invoice_str += `
+        <tr><td> </td></tr>
+      <!--spacer-->
+      <tr>
+      <td> </td></tr>
+      <!--spacer-->
+      <tr><td>Sub-total</td><td> </td><td> </td>
+        <!--spacer-->
+        <td>$<script>document.write(sub_total)</script></td>
+        </tr>
+      <tr>
+        <td>Tax @ 5.75%</td>
+        <td> </td><td> </td><!--spacer-->
+        <td>$<script>document.write(tax_total.toFixed(2))</script></td>
+      </tr>
+      <tr>
+        <td>Shipping</td>
+        <td> </td><td> </td><!--spacer-->
+        <td>$<script>document.write(shipping.toFixed(2))</script></td>
+      </tr>
+      <tr style="background-color: paleturquoise;">
+        <td><b>Total</b></td>
+        <td> </td><td> </td><!--spacer-->
+        <td><b>$<script>document.write(total_cost.toFixed(2))</script></b></td>
+      </tr>
+    </table>`
+
+    //Sending Email
+    //set email var
+    var email = cart[user_email]
+    
+    //from Assignment 3 example
+    var transporter = nodemailer.createTransport({
+        host: "mail.hawaii.edu",
+        port: 25,
+        secure: false, // use TLS
+        tls: {
+          // do not fail on invalid certs
+          rejectUnauthorized: false
+        }
+      });
+
+      var mailOptions = {
+        from: 'HTF@exampleA3.com',
+        to: email,
+        subject: 'Your phoney invoice',
+        html: invoice_str
+      };
+
+      //send email
+      //from Assignment 3 example
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          invoice_str += '<br>There was an error and your invoice could not be emailed :(';
+        } else {
+          invoice_str += `<br>Your invoice was mailed to ${user_email}`;
+        }
+        response.send(invoice_str);
+      });
+
+    request.session.destroy(); //gets rid of session
+    response.redirect(`./index.html?`)
 });
 
 //from class provided server.js

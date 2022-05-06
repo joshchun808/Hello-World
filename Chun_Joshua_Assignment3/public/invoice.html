@@ -35,6 +35,28 @@
   <!--script to pull products-->
   <script src="../products_data.js"></script>
 
+  <script>
+    //from Assignment3 example
+    function loadJSON(service, callback) {   
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('POST', service, false);
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(xobj.responseText);
+          }
+    };
+    xobj.send(null);  
+ }
+
+    var cart;
+        loadJSON('/get_cart', function (response) {
+            // Parsing JSON string into object
+            cart = JSON.parse(response);
+        });
+  </script>
+
   <!--functions-->
   <script>
     //from assignment 3 workshop
@@ -63,6 +85,16 @@
       else if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
       return return_errors ? errors : (errors.length == 0);
     }
+
+    //function to set cookie from https://www.w3schools.com/js/js_cookies.asp
+    function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+setCookie('last_page', undefined)
   </script>
 
 
@@ -70,9 +102,9 @@
     //from lab 12
     let params = (new URL(document.location)).searchParams;
     // If user is logged in, email will be in query
-    if (params.has('email') == false) {
+    /*if (params.has('email') == false) {
       location.href = "./login.html" + location.search;
-    }
+    }*/
 
     //get email from query
     email = params.get('email');
@@ -81,27 +113,52 @@
       var quantities = JSON.parse(params.get('quantity'));
     } //if statement from Reece Nagaoka, Assignment1, FALL 2021
 
+    function nav_checkout() {
+      //if logged in, welcome user
+      if (typeof cart['user_email'] != 'undefined') {
+        document.write(`<button type="button" onclick="location.href = './checkout';"
+            style="background-color: dodgerblue;">Checkout</button>`);
+      }
+      //if logged out, show login
+      else {
+        document.write(`<p style="font-size: x-large;"><b>Please Login</p></b>`);
+      }
+    }
   </script>
   <script>
     //sub total var
     var sub_total = 0;
 
     //function to generate the Item rows
-    function generate_item_rows() {
-      for (i = 0; eval("typeof name" + i); i++) {
-        let extended_price = quantities[i] * products[i].price;
+      function generate_item_rows() {
+      for (this_products_key in cart) {
+        for (i in cart[this_products_key]) {
+        let quantities = cart[this_products_key];
+        let extended_price = quantities[i] * products[this_products_key][i].price;
         sub_total += extended_price;
         if (quantities[i] > 0) {
           document.write(`
         <tr>
-        <td><img src=${products[i].image} style="width:75px;height:75px;">
-          <b>${products[i].name}</b></td>
-        <td>${Number(quantities[i])}</td>
-        <td>$${products[i].price}</td>
+        <td><img src=${products[this_products_key][i].image} style="width:75px;height:75px;">
+          <b>${products[this_products_key][i].name}</b></td>
+        <td style="text-align:center">${Number(quantities[i])}</td>
+        <td>$${products[this_products_key][i].price}</td>
         <td><b>$${extended_price}</b></td>
         </tr>
         `)
         }
+        }
+      }
+    }
+
+    function nav_login() {
+      //if logged in, welcome user
+      if (typeof cart['user_email'] != 'undefined') {
+        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${cart['user_name']}</a>`);
+      }
+      //if logged out, show login
+      else {
+        document.write(`<a href="./login.html" class="w3-bar-item w3-button">Login</a>`);
       }
     }
   </script>
@@ -113,19 +170,20 @@
 
 
     <!-- Sidebar/menu W3 template-->
-    <div class="w3-container w3-display-container w3-padding-16">
-      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
-      <h3 class="w3-wide"><b>HTF</b></h3>
-    </div>
-    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-      <!--Home, current page-->
-      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
-        id="myBtn">Home</a>
-      <!--Generate product navs-->
-      <script>nav_bar(products)</script>
-    </div>
-    <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
-    <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>
+    <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+      <div class="w3-container w3-display-container w3-padding-16">
+        <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+        <h3 class="w3-wide"><b>HTF</b></h3>
+      </div>
+      <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+        <!--Home, current page-->
+        <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+          id="myBtn">Home</a>
+        <!--Generate product navs-->
+        <script>nav_bar(products); nav_login()</script>
+      </div>
+      <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
+      <a href="#footer" class="w3-bar-item w3-button w3-padding">Store Info</a>
     </nav>
 
     <!-- Top menu on small screens W3 template-->
@@ -173,11 +231,6 @@
       <div class="w3-container w3-text-grey"></div>
 
       <!--Table for invoice-->
-      <p style="font-size: x-large;"><b>
-          <script>
-            document.write(`Invoice being sent to ${email}. Thank you for shopping at HTF!`)
-          </script>
-      </p></b>
       <table>
         <tr style="background-color: cyan;">
           <td><b>Item</b></td>
@@ -202,7 +255,7 @@
 
           // Compute Shipping
           if (sub_total > 1000) {
-            shipping = sub_total * 0.10
+            shipping = sub_total * 0.15
           }
           else if (sub_total < 500) {
             shipping = 50
@@ -259,7 +312,10 @@
       </table>
       <p><b>SHIPPING POLICY:A subtotal $0 - $500 will be $50 shipping</b></p>
       <p><b>A subtotal $500 - $999.99 will be $100 shipping</b></p>
-      <p><b>Subtotals over $1000 will be charged 10% of the subtotal amount</b></p>
+      <p><b>Subtotals over $1000 will be charged 15% of the subtotal amount</b></p>
+      <div>
+        <script>nav_checkout()</script>
+      </div>
 
       <!-- DONT TOUCH BELOW, W3 template-->
       <!-- Footer W3 template-->

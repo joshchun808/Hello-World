@@ -30,6 +30,27 @@
 
   <!--script to pull products-->
   <script src="../products_data.js"></script>
+  <script>
+    //from Assignment3 example
+    function loadJSON(service, callback) {   
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('POST', service, false);
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(xobj.responseText);
+          }
+    };
+    xobj.send(null);  
+ }
+
+    var cart;
+        loadJSON('/get_cart', function (response) {
+            // Parsing JSON string into object
+            cart = JSON.parse(response);
+        });
+  </script>
 
 </head>
 
@@ -53,6 +74,30 @@
       } //enable submit button
     } */ //removed, not approved by TA
 
+    //function to set cookie from https://www.w3schools.com/js/js_cookies.asp
+    function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+//function to get cookie from https://www.w3schools.com/js/js_cookies.asp
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
     //Function from Lab11
     //Check if textbox isNonNegInt
@@ -78,6 +123,9 @@
     let params = (new URL(document.location)).searchParams;
 
     window.onload = function () {
+
+      //set cookie for product key
+      setCookie('last_page', this_products_key)
 
       // form was submitted so check that quantities are valid then redirect to invoice if ok.
       if (params.has('errors')) {
@@ -116,6 +164,7 @@
     function nav_bar(this_product_key, products) {
       // This makes a navigation bar to other product pages
       for (let products_key in products) {
+        //create navs for other products
         if (products_key == this_product_key) {
           document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">${products_key}</a>`)
         } else {
@@ -125,11 +174,9 @@
     }
 
     function nav_login() {
-      //let value temp, replace with cookie check (maybe session check?)
-      let login_value = false
-      //if logged in, show log out
-      if (login_value == true) {
-        document.write(`<a href="#" class="w3-bar-item w3-button">Log Out</a>`);
+      //if logged in, welcome user
+      if (typeof cart['user_email'] != 'undefined') {
+        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${cart['user_name']}</a>`);
       }
       //if logged out, show login
       else {
@@ -177,7 +224,7 @@
       <p class="w3-left">Store</p>
       <!--appears at top of page-->
       <p class="w3-right">
-        <i class="fa fa-shopping-cart w3-margin-right" onclick="window.location.href = 'index.html'"></i>
+        <i class="fa fa-shopping-cart w3-margin-right" onclick="window.location.href = 'invoice.html'"></i>
         <i class="fa fa-search"></i>
       </p>
     </header>
@@ -197,6 +244,13 @@
       </div>
     </div>
 
+    <script>
+      if (typeof cart['user_email'] != 'undefined') {
+        document.write(`<center><div><p style="font-size: x-large; color: dodgerblue;"><b>Welcome back ${cart['user_name']}</p></b></div></center>`);
+      }
+    </script>
+    <center><div><p style="font-size: x-large;"><b>Shopping Cart on top right of page</p></b></div></center>
+
     <div class="w3-container w3-text-grey">
       <p><script>
         var products = products[this_products_key];
@@ -210,15 +264,19 @@
       <!--Opening tag for quantity form-->
 
       <script id="display_prods">
+        document.write(`<INPUT TYPE="HIDDEN" NAME="products_key" VALUE="${this_products_key}">`);
         //Code from WOD SmartPhonePProducts3
         //Loop to display products and quantity box
         //qty_textbox from Lab11, quantity enter
         //var products = products[this_products_key];
         for (i = 0; i < products.length; i++) {
+          var qty = '0';
+            if(typeof cart[this_products_key] != 'undefined') {
+                qty = cart[this_products_key][i];
+            }
           document.write(`
             <div class="w3-col l3 s6">
                 <div class="w3-container">
-                <INPUT TYPE="HIDDEN" NAME="products_key" VALUE="${this_products_key}">
                 <img src=${products[i].image} style="width:200px;height:200px;">
                 <p>${products[i].name}<br>
                 ${products[i].quantity_available} available<br>
@@ -226,14 +284,14 @@
                 </div>
             <br>
             <label>Quantity:</label>
-            <input type="text" name="quantity[${[i]}]" placeholder="0" onkeyup="checkQuantityTextbox(this); checkValidQty();">
+            <input type="text" name="quantity[${[i]}]" placeholder="0" value = "${qty}" onkeyup="checkQuantityTextbox(this); checkValidQty();">
             <br><span id='quantity[${[i]}]_message'></span><br>
             </div>
             `)
         }
       </script>
       <br>
-      <input name="purchase_submit" type="submit" value="Purchase" id="purchase_submit"
+      <input name="purchase_submit" type="submit" value="Add to cart" id="purchase_submit"
         style="background-color: dodgerblue;">
       <!--Submit button-->
     </form>

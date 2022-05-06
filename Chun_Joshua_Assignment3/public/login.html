@@ -44,6 +44,16 @@
         document.write(`<a href="./products_display.html?products_key=${products_key}" class="w3-bar-item w3-button">${products_key}</a>`);
       }
     }
+
+    //function to set cookie from https://www.w3schools.com/js/js_cookies.asp
+    function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+setCookie('login', 1)
   </script>
 
   </head>
