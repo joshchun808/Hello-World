@@ -50,6 +50,12 @@
             // Parsing JSON string into object
             cart = JSON.parse(response);
         });
+
+        var ud;
+        loadJSON('/get_ud', function (response) {
+            // Parsing JSON string into object
+            ud = JSON.parse(response);
+        });
   </script>
 
 </head>
@@ -175,8 +181,8 @@ function getCookie(cname) {
 
     function nav_login() {
       //if logged in, welcome user
-      if (typeof cart['user_email'] != 'undefined') {
-        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${cart['user_name']}</a>`);
+      if (typeof ud['user_email'] != 'undefined') {
+        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${ud['user_name']}</a>`);
       }
       //if logged out, show login
       else {
@@ -245,8 +251,8 @@ function getCookie(cname) {
     </div>
 
     <script>
-      if (typeof cart['user_email'] != 'undefined') {
-        document.write(`<center><div><p style="font-size: x-large; color: dodgerblue;"><b>Welcome back ${cart['user_name']}</p></b></div></center>`);
+      if (typeof ud['user_email'] != 'undefined') {
+        document.write(`<center><div><p style="font-size: x-large; color: dodgerblue;"><b>Welcome back ${ud['user_name']}</p></b></div></center>`);
       }
     </script>
     <center><div><p style="font-size: x-large;"><b>Shopping Cart on top right of page</p></b></div></center>

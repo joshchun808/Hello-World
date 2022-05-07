@@ -55,6 +55,12 @@
             // Parsing JSON string into object
             cart = JSON.parse(response);
         });
+        
+        var ud;
+        loadJSON('/get_ud', function (response) {
+            // Parsing JSON string into object
+            ud = JSON.parse(response);
+        });
   </script>
 
   <!--functions-->
@@ -115,7 +121,7 @@ setCookie('last_page', undefined)
 
     function nav_checkout() {
       //if logged in, welcome user
-      if (typeof cart['user_email'] != 'undefined') {
+      if (typeof ud['user_email'] != 'undefined') {
         document.write(`<button type="button" onclick="location.href = './checkout';"
             style="background-color: dodgerblue;">Checkout</button>`);
       }
@@ -153,8 +159,8 @@ setCookie('last_page', undefined)
 
     function nav_login() {
       //if logged in, welcome user
-      if (typeof cart['user_email'] != 'undefined') {
-        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${cart['user_name']}</a>`);
+      if (typeof ud['user_email'] != 'undefined') {
+        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${ud['user_name']}</a>`);
       }
       //if logged out, show login
       else {

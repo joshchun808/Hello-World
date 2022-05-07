@@ -65,12 +65,23 @@ app.post("/get_cart", function (request, response) {
     response.json(request.session.cart);
 });
 
+//used to view session "UD" data
+app.post("/get_ud", function (request, response) {
+    response.json(request.session.ud);
+});
+
 //monitors all requests
 app.all('*', function (request, response, next) {
     //if cart is not created, create one
     if(typeof request.session.cart == 'undefined') {
     request.session.cart = {};
     }
+
+    //if ud is not created, create one
+    if(typeof request.session.ud == 'undefined') {
+        request.session.ud = {};
+        }
+
         console.log(request.method + 'to path' + request.path);
     next();
 });
@@ -132,8 +143,8 @@ app.post('/process_form', function (request, response) {
 
 //logout
 app.post("/logout", function (request, response) {
-    request.session.cart[user_email] = undefined; //set email to session cart
-    request.session.cart[user_name] = undefined //set email to session cart
+    request.session.ud[user_email] = undefined; //set email to session ud
+    request.session.ud[user_name] = undefined //set email to session ud
     response.redirect(`./index.html`)
 });
 
@@ -151,8 +162,8 @@ app.post("/login", function (request, response) {
     if (typeof user_data[login_email] != 'undefined') {
         //checks password entered matches stored password
         if (user_data[login_email].password == login_password) {
-            request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
-            request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+            request.session.ud.user_email = request.body['email'].toLowerCase(); //set email to session ud
+            request.session.ud.user_name = user_data[login_email].name; //set email to session ud
             response.redirect(`./index.html`); //IR1, Redirect to last page
             return;
         }
@@ -223,8 +234,8 @@ app.post("/register", function (request, response) {
         //writes user information into file
         fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-        request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
-        request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+        request.session.ud.user_email = request.body['email'].toLowerCase(); //set email to session ud
+        request.session.ud.user_name = request.body['name']; //set email to session ud
         response.redirect(`./index.html`); //IR1, Redirect to last page
         return;
     }
@@ -272,8 +283,8 @@ app.post("/newpw", function (request, response) {
                 //writes user information into file
                 fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
 
-                request.session.cart.user_email = request.body['email'].toLowerCase(); //set email to session cart
-                request.session.cart.user_name = user_data[login_email].name; //set email to session cart
+                request.session.ud.user_email = request.body['email'].toLowerCase(); //set email to session ud
+                request.session.ud.user_name = user_data[login_email].name; //set email to session ud
                 response.redirect(`./index.html`); //IR1, Redirect to last page
                 return;
             }
@@ -296,6 +307,7 @@ app.post("/newpw", function (request, response) {
 
 //button to checkout on invoice.html
 app.get("/checkout", function (request, response) {
+    /*
     // Generate HTML invoice string
     var invoice_str = `Thank you for your order!
     <table>
@@ -307,6 +319,7 @@ app.get("/checkout", function (request, response) {
     //from invoice
     var sub_total = 0;
     var cart = request.session.cart;
+    var ud = request.session.ud
     for (this_products_key in cart) {
         for (i in cart[this_products_key]) {
         let quantities = cart[this_products_key];
@@ -336,7 +349,7 @@ app.get("/checkout", function (request, response) {
 
     //Sending Email
     //set email var
-    var email = cart[user_email]
+    var email = ud[user_email]
     
     //from Assignment 3 example
     var transporter = nodemailer.createTransport({
@@ -366,6 +379,7 @@ app.get("/checkout", function (request, response) {
         }
         response.send(invoice_str);
       });
+      */
 
     request.session.destroy(); //gets rid of session
     response.redirect(`./index.html?`)

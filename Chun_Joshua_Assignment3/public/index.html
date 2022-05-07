@@ -37,6 +37,12 @@
   <script src="../products_data.js"></script>
 
   <script>
+    var ud;
+        loadJSON('/get_ud', function (response) {
+            // Parsing JSON string into object
+            ud = JSON.parse(response);
+        });
+
     //from assignment 3 workshop
     // This function makes a navigation bar from a products_data object
     function nav_bar(products) {
@@ -48,8 +54,8 @@
 
     function nav_login() {
       //if logged in, welcome user
-      if (typeof cart['user_email'] != 'undefined') {
-        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${cart['user_name']}</a>`);
+      if (typeof ud['user_email'] != 'undefined') {
+        document.write(`<a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">Welcome back ${ud['user_name']}</a>`);
       }
       //if logged out, show login
       else {
