@@ -307,13 +307,15 @@ app.post("/newpw", function (request, response) {
 
 //button to checkout on invoice.html
 app.get("/checkout", function (request, response) {
-    /*
+    
     // Generate HTML invoice string
     var invoice_str = `Thank you for your order!
     <table>
     <tr style="background-color: cyan;">
     <td><b>Item</b></td>
     <td><b>Quantity</b></td>
+    <td><b>Price</b></td>
+    <td><b>Extended price</b></td>
     </tr>`;
 
     //from invoice
@@ -323,6 +325,8 @@ app.get("/checkout", function (request, response) {
     for (this_products_key in cart) {
         for (i in cart[this_products_key]) {
         let quantities = cart[this_products_key];
+        let extended_price = quantities[i] * products[this_products_key][i].price;
+        sub_total += extended_price;
         if (quantities[i] > 0) {
             //adds products to invoice string variable
             invoice_str +=` 
@@ -330,28 +334,73 @@ app.get("/checkout", function (request, response) {
           <td><img src=${products[this_products_key][i].image} style="width:75px;height:75px;">
             <b>${products[this_products_key][i].name}</b></td>
           <td style="text-align:center">${Number(quantities[i])}</td>
+          <td>$${products[this_products_key][i].price}</td>
+        <td><b>$${extended_price}</b></td>
           </tr>
           `
           }
           }
     }
 
+    // Tax Rate
+    var tax_rate = 0.0575
+
+    // Shiping Rate
+    var shipping = 0
+
+    // Compute Cost
+    var tax_total = sub_total * tax_rate
+    var total_cost = sub_total + tax_total + shipping
+
+    // Compute Shipping
+    if (sub_total > 1000) {
+      shipping = sub_total * 0.15
+    }
+    else if (sub_total < 500) {
+      shipping = 50
+    }
+    else (sub_total < 1000)[
+      shipping = 100
+    ]
+
         //adds end of table to invoice string variable
         invoice_str += `
         <tr><td> </td></tr>
-      <!--spacer-->
-      <tr><td> </td></tr>
-      <!--spacer-->
-      <tr style="background-color: paleturquoise;">
-        <td><b>Thank you for shopping at HTF</b></td>
-      </tr>
+        <!--spacer-->
+        <tr><td> </td></tr>
+        <!--spacer-->
+        <tr>
+          <td>Sub-total</td>
+          <td> </td><td> </td>
+          <!--spacer-->
+          <td>$${sub_total.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Tax @ 5.75%</td>
+          <td> </td><td> </td>
+          <!--spacer-->
+          <td>$${tax_total.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Shipping</td>
+          <td> </td><td> </td>
+          <!--spacer-->
+          <td>$${shipping.toFixed(2)}</td>
+        </tr>
+        <tr style="background-color: paleturquoise;">
+          <td><b>Total</b></td>
+          <td> </td><td> </td>
+          <!--spacer-->
+          <td><b>$${total_cost.toFixed(2)}</b></td>
+        </tr>
     </table>`
 
     //Sending Email
     //set email var
-    var email = ud[user_email]
+    var email = request.session.ud.user_email
     
     //from Assignment 3 example
+    var nodemailer = require('nodemailer');
     var transporter = nodemailer.createTransport({
         host: "mail.hawaii.edu",
         port: 25,
@@ -379,7 +428,7 @@ app.get("/checkout", function (request, response) {
         }
         response.send(invoice_str);
       });
-      */
+      
 
     request.session.destroy(); //gets rid of session
     response.redirect(`./index.html?`)
